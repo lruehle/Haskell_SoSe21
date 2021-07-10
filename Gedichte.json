@@ -1,0 +1,36 @@
+{
+    "database": {
+        "1":{
+            "Autor" : "Eichendorf",
+            "Titel" : "Lied",
+            "Gedicht" : "Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort",
+            "Jahr" : 188873,
+            "ausgelesen" : "false",
+            "ausgelesen am" : "false" 
+        },
+        "2":{
+            "Autor" : "Eichendorf_2",
+            "Titel" : "Lied_2",
+            "Gedicht" : "Schläft ein Lied",
+            "Jahr" : 188873,
+            "ausgelesen" : "false",
+            "ausgelesen am" : "false"
+        },
+        "3" : {
+            "Autor" : "Eichendorf_3",
+            "Titel" : "Lied_3",
+            "Gedicht" : " in allen Dingen, die da Träumen fort und fort.",
+            "Jahr" : 188873,
+            "ausgelesen" : "false",
+            "ausgelesen am" : "false"
+        },
+        "4":{
+            "Autor" : "Eichendorf_4",
+            "Titel" : "Lied_4",
+            "Gedicht" : "Und die Welt hebt an zu singen, triffst du nur das Zauberwort",
+            "Jahr" : 188873,
+            "ausgelesen" : "false",
+            "ausgelesen am" : "false" 
+        }
+    }
+}
