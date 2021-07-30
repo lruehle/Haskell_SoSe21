@@ -1,3 +1,6 @@
+--working through the learnYouAHaskell Book & creating hopefully usefull funcs on top while doing so
+
+
 doubleMe x = x +x
 doubleUs y x = x*2 + y*2
 
@@ -81,17 +84,35 @@ zipWith' f (x:xs) (y:ys) = f x y :  zipWith' f xs ys
 flip' :: (a -> b -> c) -> b -> a -> c  
 flip' f y x = f x y  
 
+--lilz
 printWithLineBreak = zipWith' (++) ["erster Satz","zweiter Satz","dritter Satz"] ["\n", " linebreak \n", " linebreak \n"]
---printWithLineBreak' = putStr
 
+--lilz
 strListToString :: [String] -> String -- ["erster Satz","zweiter Satz linebreak","dritter Satz"] -- unlines does same check: https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:unlines
 strListToString [] = []
 strListToString (x:xs) = x ++ strListToString xs --needs putStr to format in ghci
---listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line
+--listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line, use delimiter func strListToStringWith
 
+--lilz
 strListToStringWith :: [String] -> String -> String --if no delimiter, use listToString
 strListToStringWith [] _ = []
+strListToStringWith [x] _ = x --last Element does not get \n
 strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim 
 
+--lilz
+strListToStringNL :: [String] -> String
+strListToStringNL [] = []
+strListToStringNL x = strListToStringWith x " \n " 
+--lilz
+strListCurry = strListToStringWith ["this is a curry!", "....or at least a try"] -- figuring out currying -- strListCurry ":))" => "this is a curry!:))....or at least a try"
+
+--lilz
 addNewLine :: String -> String
 addNewLine a = a ++ "\n" 
+
+-- Point of Lambda https://stackoverflow.com/questions/22220439/haskell-lambda-expression/22221169
+addThree :: (Num a) => a -> a -> a -> a  
+addThree x y z = x + y + z  
+-- is equal to:
+addThree :: (Num a) => a -> a -> a -> a  
+addThree = \x -> \y -> \z -> x + y + z
