@@ -1,5 +1,5 @@
 --working through the learnYouAHaskell Book & creating hopefully usefull funcs on top while doing so
-
+import System.IO
 
 doubleMe x = x +x
 doubleUs y x = x*2 + y*2
@@ -114,5 +114,10 @@ addNewLine a = a ++ "\n"
 addThree :: (Num a) => a -> a -> a -> a  
 addThree x y z = x + y + z  
 -- is equal to:
-addThree :: (Num a) => a -> a -> a -> a  
-addThree = \x -> \y -> \z -> x + y + z
+addThree' :: (Num a) => a -> a -> a -> a  
+addThree'    = \x -> \y -> \z -> x + y + z
+
+
+main = do
+    contents <- readFile "Gedichte.json"
+    putStr contents
