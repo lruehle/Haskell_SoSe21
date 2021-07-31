@@ -1,0 +1,12 @@
+{ "gedichte":
+    
+        {
+            "autor" : "Eichendorf",
+            "titel" : "Lied",
+            "gedicht" : "Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort",
+            "jahr" : 188873,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false" 
+        }
+    
+}
