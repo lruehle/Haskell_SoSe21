@@ -45,6 +45,7 @@ file = "Gedichte2.json"
 jsonData :: IO BS.ByteString
 jsonData = BS.readFile file
 
+contents :: IO String
 contents = readFile file
 
 
@@ -68,10 +69,21 @@ strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim
 
 
 
+main :: IO ()
 main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/json
     --d <- (eitherDecode <$> jsonData) :: IO (Either String [Gedicht]) --gedichte3.json
-    d <- (eitherDecode <$> jsonData) :: IO (Either String Gedichte) --gedichte2.json
+    --print contents -- doesn't work because of ´unopenable´ IO Box? IO is not function, but action. So we need to run it before printing. <- basically is "run" operator 
+    content <- contents
+    putStr content --works because IO box is now opened ?
+    --serialize <- decode $ jsonData
+    
+    parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
+    case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either
+       Left err -> putStrLn err
+       Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
+    --print jsonDate
+    {-d <- (eitherDecode <$> jsonData) :: IO (Either String Gedichte) --gedichte2.json
     case d of
         Left err -> putStrLn err
-        Right good -> print good
- --figure out way to read Array of values with rootObj
+        Right good -> print good-}
+ --figure out way to read Array of values with rootObj 
