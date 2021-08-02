@@ -7,6 +7,9 @@ import Data.Aeson
 import GHC.Generics
 import Data.Text
 import qualified Data.ByteString.Lazy as BS
+import GHC.Data.Maybe (fromJust)
+import Data.Aeson.Types (parseMaybe)
+import GHC.Tc.Solver.Monad (getInertCans)
 
 data Person = Person {
     name :: String
@@ -18,7 +21,7 @@ instance ToJSON Person where
 instance FromJSON Person where  
 
 -- read Datas into Tuples? Each Gedicht is a Tuple, Gedichte therefore a List of Tuples? -> Size stays the same, but mixed value
-data Gedichte = Gedichte {
+data Gedichte = Gedichte { -- https://artyom.me/aeson#nested-records check for nested json reading
     gedichte :: Gedicht
 } deriving (Show, Generic)  --Gedichte2.json
 
@@ -37,6 +40,12 @@ instance ToJSON Gedicht
 
 instance FromJSON Gedichte --Gedichte2.json
 instance ToJSON Gedichte
+
+getChild :: Gedichte -> Int -> Gedicht
+getChild parent index =  undefined
+
+getIntro :: Gedicht -> String
+getIntro inst = autor inst ++ " : " ++ titel inst
 
 file :: FilePath
 file = "Gedichte2.json"
@@ -63,6 +72,7 @@ strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim
 
 
 
+
 {-main = do
     contents <- readFile "Gedichte.json" -- use Data.ByteString.Lazy.readFile is better?
     putStr contents -}
@@ -71,19 +81,18 @@ strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim
 
 main :: IO ()
 main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/json
-    --d <- (eitherDecode <$> jsonData) :: IO (Either String [Gedicht]) --gedichte3.json
+    --content <- contents
+    --putStr content --works because IO box is now opened ?
     --print contents -- doesn't work because of ´unopenable´ IO Box? IO is not function, but action. So we need to run it before printing. <- basically is "run" operator 
-    content <- contents
-    putStr content --works because IO box is now opened ?
-    --serialize <- decode $ jsonData
-    
+    -- print jsonDate 
+    --parsedData <- (eitherDecode <$> jsonData) :: IO (Either String [Gedicht]) --gedichte3.json
     parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
     case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either
        Left err -> putStrLn err
-       Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
-    --print jsonDate
-    {-d <- (eitherDecode <$> jsonData) :: IO (Either String Gedichte) --gedichte2.json
-    case d of
-        Left err -> putStrLn err
-        Right good -> print good-}
- --figure out way to read Array of values with rootObj 
+       --Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
+       --Right parsed -> print ( gedichte parsed) -- prints gedichte from parsed (::Gedichte)
+       Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed)
+    
+    
+
+    
