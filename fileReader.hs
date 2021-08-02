@@ -22,7 +22,7 @@ instance FromJSON Person where
 
 -- read Datas into Tuples? Each Gedicht is a Tuple, Gedichte therefore a List of Tuples? -> Size stays the same, but mixed value
 data Gedichte = Gedichte { -- https://artyom.me/aeson#nested-records check for nested json reading
-    gedichte :: Gedicht
+    gedichte :: [Gedicht]
 } deriving (Show, Generic)  --Gedichte2.json
 
 data Gedicht = Gedicht {
@@ -91,8 +91,14 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
        Left err -> putStrLn err
        --Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
        --Right parsed -> print ( gedichte parsed) -- prints gedichte from parsed (::Gedichte)
-       Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed)
-    
-    
+       --Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed), nur bei non-Array Child Object von Gedicht   
+       Right parsed -> print ( getIntro (gedichte parsed!!1)) -- prints getIntro for (gedichte (parsed index 1)) -- remember index 0 is head
 
-    
+
+{-- next up:
+    get length of Gedicht -> Gedichte
+    make random number from length
+    print out Data at length
+    print out more Data than just Titel & Autor
+    Change read 
+--} 
