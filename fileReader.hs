@@ -29,7 +29,7 @@ data Gedichte = Gedichte { -- https://artyom.me/aeson#nested-records check for n
 data Gedicht = Gedicht {
         autor :: String,
         titel :: String,
-        gedicht :: String,
+        gedicht :: [String],
         jahr :: Integer,
         ausgelesen :: Bool,
         ausgelesenAm :: String -- check for Date Time Format
@@ -46,7 +46,10 @@ getChild :: Gedichte -> Int -> Gedicht
 getChild parent index =  undefined
 
 getIntro :: Gedicht -> String
-getIntro inst = autor inst ++ " : " ++ titel inst
+getIntro inst = "\n" ++ autor inst ++ " - "++ show (jahr inst) ++ " \n" ++ titel inst ++"\n"
+
+getBody :: Gedicht -> String
+getBody inst = "\n" ++ strListToStringWith (gedicht inst) "\n" 
 
 getLength :: [a] -> Int
 getLength [] = 0
@@ -75,11 +78,13 @@ strListToStringWith [] _ = []
 strListToStringWith [x] _ = x --last Element does not get \n
 strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim 
 
+
 printRandGedicht :: Gedichte -> String
 printRandGedicht sammlung = 
     let f = getLength (gedichte sammlung)
         g = getIntro (gedichte sammlung !!(f-1))-- replace by random number
-    in "Autor und Titel sind: " ++ g
+        h = getBody (gedichte sammlung !! (f-1)) --replace by random number
+    in g ++ h   --"\n " ++ g ++ "\n" ++ h ++ "\n" --why is linebreak not working? now in g & h
                 -- can i call do recursion with different input types? if parameter int =; if parameter string= etc?
 
 
@@ -109,12 +114,12 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
        --Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed), nur bei non-Array Child Object von Gedicht   
        --Right parsed -> print ( getIntro (gedichte parsed!!1) ++ show(getLength (gedichte parsed))) -- prints getIntro for (gedichte (parsed index 1)) -- remember index 0 is head
        Right parsed -> do 
-           print "parsing done" --print $ printRandGedicht parsed -- put into variable but NOT print possible?
+           putStrLn "parsing done" --print $ printRandGedicht parsed -- put into variable but NOT print possible?
            putStrLn "Wilkommen in der Gedichte Sammlung"
-           print ("Zur Zeit stehen " ++ show (getLength(gedichte parsed)) ++ " Gedichte zur Auswahl")
-           print "Möchten Sie ein zufälliges Gedicht lesen?"
+           putStrLn  ("Zur Zeit stehen " ++ show (getLength(gedichte parsed)) ++ " Gedichte zur Auswahl")
+           putStrLn "Möchten Sie ein zufälliges Gedicht lesen?"
            user <- getLine
-           let check | user == "y" = putStr ("Super! \n" ++ show (printRandGedicht parsed))
+           let check | user == "y" = putStr ("Super! \n" ++ printRandGedicht parsed)
                      | user == "n" = putStr "Sehr Schade, Sie verpassen was"
                      | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur 'y' für ja und 'n' für nein"
            check
@@ -122,9 +127,11 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
 
 
 {-- next up:
-    get length of Gedicht -> Gedichte
+    xxx get length of Gedicht -> Gedichte
     make random number from length
-    print out Data at length
+    xxx print out Data at length
     print out more Data than just Titel & Autor
     Change read 
+    xxx think about Poem formatting / reading / printing ; seperate by ,.;:? use \n ? no new line in JSON source accepted 
+            for human readableness use List of Strings for Lines?
 --} 
