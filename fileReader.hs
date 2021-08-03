@@ -3,6 +3,7 @@
 
 
 import System.IO
+import System.Exit
 import Data.Aeson
 import GHC.Generics
 import Data.Text
@@ -47,6 +48,10 @@ getChild parent index =  undefined
 getIntro :: Gedicht -> String
 getIntro inst = autor inst ++ " : " ++ titel inst
 
+getLength :: [a] -> Int
+getLength [] = 0
+getLength (_:xs) = 1 + getLength xs
+
 file :: FilePath
 file = "Gedichte2.json"
 --file = "Gedichte3.json"
@@ -70,13 +75,22 @@ strListToStringWith [] _ = []
 strListToStringWith [x] _ = x --last Element does not get \n
 strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim 
 
-
+printRandGedicht :: Gedichte -> String
+printRandGedicht sammlung = 
+    let f = getLength (gedichte sammlung)
+        g = getIntro (gedichte sammlung !!(f-1))-- replace by random number
+    in "Autor und Titel sind: " ++ g
+                -- can i call do recursion with different input types? if parameter int =; if parameter string= etc?
 
 
 {-main = do
     contents <- readFile "Gedichte.json" -- use Data.ByteString.Lazy.readFile is better?
     putStr contents -}
 
+-- fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
+fallOverAndDie :: String -> IO a
+fallOverAndDie err = do putStrLn err
+                        exitWith (ExitFailure 1)
 
 
 main :: IO ()
@@ -86,13 +100,25 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
     --print contents -- doesn't work because of ´unopenable´ IO Box? IO is not function, but action. So we need to run it before printing. <- basically is "run" operator 
     -- print jsonDate 
     --parsedData <- (eitherDecode <$> jsonData) :: IO (Either String [Gedicht]) --gedichte3.json
+
     parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
-    case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either
-       Left err -> putStrLn err
+    case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either   otherwise will return "Left ..." or "Right..."
+       Left err -> fallOverAndDie ("Parsing Error! Programm will be stopped because: "++err)
        --Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
        --Right parsed -> print ( gedichte parsed) -- prints gedichte from parsed (::Gedichte)
        --Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed), nur bei non-Array Child Object von Gedicht   
-       Right parsed -> print ( getIntro (gedichte parsed!!1)) -- prints getIntro for (gedichte (parsed index 1)) -- remember index 0 is head
+       --Right parsed -> print ( getIntro (gedichte parsed!!1) ++ show(getLength (gedichte parsed))) -- prints getIntro for (gedichte (parsed index 1)) -- remember index 0 is head
+       Right parsed -> do 
+           print "parsing done" --print $ printRandGedicht parsed -- put into variable but NOT print possible?
+           putStrLn "Wilkommen in der Gedichte Sammlung"
+           print ("Zur Zeit stehen " ++ show (getLength(gedichte parsed)) ++ " Gedichte zur Auswahl")
+           print "Möchten Sie ein zufälliges Gedicht lesen?"
+           user <- getLine
+           let check | user == "y" = putStr ("Super! \n" ++ show (printRandGedicht parsed))
+                     | user == "n" = putStr "Sehr Schade, Sie verpassen was"
+                     | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur 'y' für ja und 'n' für nein"
+           check
+           
 
 
 {-- next up:
