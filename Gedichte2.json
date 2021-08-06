@@ -34,6 +34,106 @@
             
         },
         {
+            "autor" : "Rose Ausländer",
+            "titel" : "Nachtzauber",
+            "gedicht" : ["Der Mond errötet","Kühle durchweht die Nacht","\n","Am Himmel","Zauberstrahlen aus Kristall","\n", "Ein Poem","besucht den Dichter", "\n", "Ein stiller Gott", "schenkt Schlaf", "eine verirrte Lerche",
+                "singt im Traum","auch Fische singen mit","denn es ist Brauch","in solcher Nacht","Unmögliches zu tun","\n"],
+            "jahr" : 1956,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Wilhelm Busch",
+            "titel" : "Es sitzt ein Vogel",
+            "gedicht" : ["Es sitzt ein Vogel auf dem Leim,", "Er flattert sehr und kann nicht heim.","Ein schwarzer Kater schleicht herzu,","Die Krallen scharf, die Augen gluh.",
+                "Am Baum hinauf und immer höher","Kommt er dem armen Vogel näher.", "\n","Der Vogel denkt: Weil das so ist","Und weil mich doch der Kater frisst,","So will ich keine Zeit verlieren,",
+                "Will noch ein wenig quinquilieren","Und lustig pfeifen wie zuvor.","Der Vogel, scheint mir, hat Humor.","\n"],
+            "jahr" : 1874,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Joachim Ringelnatz",
+            "titel" : "Die Ameisen",
+            "gedicht" : ["In Hamburg lebten zwei Ameisen,","Die wollten nach Australien reisen.", "Bei Altona auf der Chaussee,", "Da taten ihnen die Beine weh,", "Und da verzichteten sie weise", "Dann auf den letzten Teil der Reise.",
+                "\n","So will man oft und kann doch nicht", "Und leistet dann recht gern Verzicht.", "\n"],
+            "jahr" : 1933,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Joachim Ringelnatz",
+            "titel" : "Der Bumerang",
+            "gedicht" : ["War einmal ein Bumerang;","War ein Weniges zu lang.","Bumerang flog ein Stück,","Aber kam nicht mehr zurück.","Publikum ­ noch stundenlang ","Wartete auf Bumerang.", "\n"],
+            "jahr" : 1923,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Ludwig Uhland",
+            "titel" : "Einkehr",
+            "gedicht" : ["Bei einem Wirte wundermild,",
+            "Da war ich jüngst zu Gaste;",
+            "Ein goldner Apfel war sein Schild",
+            "An einem langen Aste.", "\n",
+
+            "Es war der gute Apfelbaum,",
+            "Bei dem ich eingekehret;",
+            "Mit süßer Kost und frischem Schaum",
+            "Hat er mich wohl genähret","\n",
+
+            "Es kamen in sein grünes Haus",
+            "Viel leichtbeschwingte Gäste;",
+            "Sie sprangen frei und hielten Schmaus",
+            "Und sangen auf das beste.", "\n",
+
+            "Ich fand ein Bett zu süßer Ruh",
+            "Auf weichen, grünen Matten;",
+            "Der Wirt, er deckte selbst mich zu",
+            "Mit seinem kühlen Schatten.", "\n",
+
+            "Nun fragt ich nach der Schuldigkeit,",
+            "Da schüttelt er den Wipfel.",
+            "Gesegnet sei er allezeit",
+            "Von der Wurzel bis zum Gipfel.", "\n"],
+            "jahr" : 1811,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Theodor Storm",
+            "titel" : "Ein grünes Blatt",
+            "gedicht" : ["Ein Blatt aus sommerlichen Tagen,",
+                "Ich nahm es so im Wandern mit,",
+                "Auf daß es einst mir möge sagen,",
+                "Wie laut die Nachtigall geschlagen,",
+                "Wie grün der Wald, den ich durchschritt.","\n"],
+            "jahr" : 1850,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
+            "autor" : "Georg Trakl",
+            "titel" : "Ein Winterabend",
+            "gedicht" : ["Wenn der Schnee ans Fenster fällt,",
+                "Lang die Abendglocke läutet,",
+                "Vielen ist der Tisch bereitet",
+                "Und das Haus ist wohlbestellt.","\n",
+                
+                "Mancher auf der Wanderschaft",
+                "Kommt ans Tor auf dunklen Pfaden.",
+                "Golden blüht der Baum der Gnaden",
+                "Aus der Erde kühlem Saft.", "\n",
+                
+                "Wanderer tritt still herein;",
+                "Schmerz versteinerte die Schwelle.",
+                "Da erglänzt in reiner Helle",
+                "Auf dem Tische Brot und Wein.","\n"],
+            "jahr" : 1913,
+            "ausgelesen" : false,
+            "ausgelesenAm" : "false"
+        },
+        {
             "autor" : "",
             "titel" : "",
             "gedicht" : [],

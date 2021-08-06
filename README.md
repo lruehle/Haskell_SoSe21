@@ -9,3 +9,4 @@ check https://stackoverflow.com/questions/2931557/haskell-check-for-user-input-e
 check UTF-8 library, apparently broken?
 
 Poets from https://wiki.haskell.org/Humor/Poetry
+and https://www.deutschelyrik.de/

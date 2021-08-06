@@ -48,18 +48,7 @@ instance ToJSON Gedicht
 instance FromJSON Gedichte --Gedichte2.json
 instance ToJSON Gedichte
 
-getChild :: Gedichte -> Int -> Gedicht
-getChild parent index =  undefined
 
-getIntro :: Gedicht -> String
-getIntro inst = "\n" ++ autor inst ++ " - "++ show (jahr inst) ++ " \n" ++ titel inst ++"\n"
-
-getBody :: Gedicht -> String
-getBody inst = "\n" ++ strListToStringWith (gedicht inst) "\n" 
-
-getLength :: [a] -> Int
-getLength [] = 0
-getLength (_:xs) = 1 + getLength xs
 
 file :: FilePath
 file = "Gedichte2.json"
@@ -72,33 +61,25 @@ contents :: IO String
 contents = readFile file
 
 
+getIntro :: Gedicht -> String
+getIntro inst = "\n\t" ++ autor inst ++ " - "++ show (jahr inst) ++ " \n\t" ++ titel inst ++"\n"
+
+getBody :: Gedicht -> String
+getBody inst = "\n " ++ strListToStringWith (gedicht inst) "\n \t" 
+
+getLength :: [a] -> Int
+getLength [] = 0
+getLength (_:xs) = 1 + getLength xs
 
 
--- if delimiter needed use strListToStringWith
-strListToString :: [String] -> String -- ["erster Satz","zweiter Satz linebreak","dritter Satz"] -- unlines does same check: https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:unlines
-strListToString [] = []
-strListToString (x:xs) = x ++ strListToString xs --needs putStr to format in ghci
---listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line, 
-
---if no delimiter, use listToString
-strListToStringWith :: [String] -> String -> String 
-strListToStringWith [] _ = []
-strListToStringWith [x] _ = x --last Element does not get \n
-strListToStringWith (x:xs) delim = x ++ delim ++ strListToStringWith xs delim 
-
-
-printRandGedicht :: Gedichte -> String
-printRandGedicht sammlung = 
-    let f = getLength (gedichte sammlung)
-        g = getIntro (gedichte sammlung !!(f-1))-- replace by random number
-        h = getBody (gedichte sammlung !! (f-1)) --replace by random number
+printRandGedicht :: Gedichte -> Int -> String
+printRandGedicht sammlung indx = 
+    let --f = getLength (gedichte sammlung)
+        g = getIntro (gedichte sammlung !!(indx-1))-- replace by random number
+        h = getBody (gedichte sammlung !!(indx-1)) --replace by random number
     in g ++ h   --"\n " ++ g ++ "\n" ++ h ++ "\n" --why is linebreak not working? now in g & h
                 -- can i call do recursion with different input types? if parameter int =; if parameter string= etc?
 
-
-{-main = do
-    contents <- readFile "Gedichte.json" -- use Data.ByteString.Lazy.readFile is better?
-    putStr contents -}
 
 -- fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
 fallOverAndDie :: String -> IO a
@@ -110,16 +91,38 @@ date :: UTCTime -> (Integer,Int,Int) --Year is type Integer
 date = toGregorian .utctDay -- will output f.e (2021,8,5)
 
 
-
-
-
-randomNumber :: (Integer,Int,Int) -> UTCTime ->Int
---randomNumber (y,m,d) time = fromIntegral(diffTimeToPicoseconds (utctDayTime time)) + m + d + fromIntegral y
-randomNumber (y,m,d) time = div (a + b + c + e ) 2
+-- generate random Number from Date & Time
+dateNumber :: (Integer,Int,Int) -> UTCTime ->Int
+dateNumber (y,m,d) time = a + b + c + e 
     where a = fromIntegral(diffTimeToPicoseconds (utctDayTime time))
           b =  d
           c =  m
           e =  fromIntegral y
+
+--check if num/Queersumme small enough for bound
+randomNumbInBound :: Int -> Int -> Int
+randomNumbInBound numb bound 
+    | numb <= bound = numb
+    | otherwise = randomNumbInBound (crossSum numb) bound --get crossSum until small enough
+ 
+-- Queersumme
+crossSum :: Int -> Int
+crossSum 0 = 0
+crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
+
+
+
+-- if delimiter needed use strListToStringWith
+strListToString :: [String] -> String -- ["erster Satz","zweiter Satz linebreak","dritter Satz"] -- unlines does same check: https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:unlines
+strListToString [] = []
+strListToString (x:xs) = x ++ strListToString xs --needs putStr to format in ghci
+--listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line, 
+
+--if no delimiter, use listToString
+strListToStringWith :: [String] -> String -> String 
+strListToStringWith [] _ = []
+--strListToStringWith [x] _ = x --last Element does not get \n
+strListToStringWith (x:xs) delim = delim ++ x ++ strListToStringWith xs delim 
 {--
 get day, get Time, get time since runghc started (or other "random" values)
 put into Range of 0, getLength (Gedichte Gedicht)
@@ -145,13 +148,15 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
        Right parsed -> do 
            putStrLn "parsing done" --print $ printRandGedicht parsed -- put into variable but NOT print possible?
            putStrLn ("Wilkommen in der Gedichte Sammlung! \n Zur Zeit stehen " ++ show (getLength(gedichte parsed)) ++ " Gedichte zur Auswahl \n")
-           putStrLn ("Sekunden seit Mittnacht: "++ show current)  
-           putStrLn ("Sekunden seit Mittnacht: "++ show (diffTimeToPicoseconds (utctDayTime current)))  
-           putStrLn ("random Number "++ show (randomNumber (date current) current))  
-           putStrLn ("datum ist: "++ show (date current))  
+           let length = getLength(gedichte parsed)
+           --putStrLn ("Sekunden seit Mittnacht: "++ show current)  
+           --putStrLn ("Sekunden seit Mittnacht: "++ show (diffTimeToPicoseconds (utctDayTime current)))  
+           putStrLn ("random Number "++ show(randomNumbInBound(dateNumber (date current) current) length)) 
+           let rand = randomNumbInBound(dateNumber (date current) current) length
+           --putStrLn ("datum ist: "++ show (date current))  
            putStrLn "Möchten Sie ein zufälliges Gedicht lesen? (y/n)"
            user <- getLine
-           let check | user == "y" = putStr ("Super, viel Spaß! \n" ++ printRandGedicht parsed)
+           let check | user == "y" = putStr ("\n Super, viel Spaß! \n" ++ printRandGedicht parsed rand)
                      | user == "n" = putStr "Sehr Schade, Sie verpassen was"
                      | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur 'y' für ja und 'n' für nein"
            check
@@ -162,14 +167,17 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
 {-- next up:
     make random number from length
         ***-> make own random number
-        -> make random number with Range of Length
+        ***-> make random number with Range of Length
+        -> Error testing? Can runtime err occur?
     Change read 
     make own "Date" - Type?
     repeat questions in main (without repeating parse possible? reasonable? Repeat only right? Reasonable until poems can get added?)
     print choosable options to cmd possible? 
+    pretty print function instead of adding "\n\t" to String
     xxx get length of Gedicht -> Gedichte
     xxx print out Data at length
     xxx print out more Data than just Titel & Autor
     xxx think about Poem formatting / reading / printing ; seperate by ,.;:? use \n ? no new line in JSON source accepted 
             for human readableness use List of Strings for Lines?
+
 --} 
