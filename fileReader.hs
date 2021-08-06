@@ -4,17 +4,19 @@
 
 import System.IO
 import System.Exit
-import Data.Aeson
 import GHC.Generics
-import Data.Text
-import qualified Data.ByteString.Lazy as BS
-import GHC.Data.Maybe (fromJust)
+import Data.Aeson
 import Data.Aeson.Types (parseMaybe)
-import GHC.Tc.Solver.Monad (getInertCans)
+import Data.Aeson.Text (encodeToLazyText)
+import Data.Text 
 import Data.Time
 import Data.Time.Clock.POSIX
 import Data.Time.Calendar
 import Data.Time.Calendar.WeekDate
+import qualified Data.ByteString.Lazy as BS
+import GHC.Data.Maybe (fromJust)
+import GHC.Tc.Solver.Monad (getInertCans)
+
 
 
 
@@ -27,10 +29,10 @@ instance ToJSON Person where
     toEncoding = genericToEncoding defaultOptions
 instance FromJSON Person where  
 
--- read Datas into Tuples? Each Gedicht is a Tuple, Gedichte therefore a List of Tuples? -> Size stays the same, but mixed value
+
 data Gedichte = Gedichte { -- https://artyom.me/aeson#nested-records check for nested json reading
     gedichte :: [Gedicht]
-} deriving (Show, Generic)  --Gedichte2.json
+} deriving (Show, Generic) 
 
 data Gedicht = Gedicht {
         autor :: String,
@@ -38,28 +40,31 @@ data Gedicht = Gedicht {
         gedicht :: [String],
         jahr :: Integer,
         ausgelesen :: Bool,
-        ausgelesenAm :: String -- check for Date Time Format
+        anzahlGelesen :: Int 
     } deriving (Show, Generic)
 
--- Write to an FromJson myself?
+
 instance FromJSON Gedicht
 instance ToJSON Gedicht
 
-instance FromJSON Gedichte --Gedichte2.json
+instance FromJSON Gedichte 
 instance ToJSON Gedichte
 
 
 
 file :: FilePath
 file = "Gedichte2.json"
---file = "Gedichte3.json"
+
+file2 :: FilePath
+file2 = "Gedichte3.json"
+
+
+
+
+-- ********************** Get Json contents *******************
 
 jsonData :: IO BS.ByteString
 jsonData = BS.readFile file
-
-contents :: IO String
-contents = readFile file
-
 
 getIntro :: Gedicht -> String
 getIntro inst = "\n\t" ++ autor inst ++ " - "++ show (jahr inst) ++ " \n\t" ++ titel inst ++"\n"
@@ -72,26 +77,18 @@ getLength [] = 0
 getLength (_:xs) = 1 + getLength xs
 
 
+
+-- ********************** Create Random Number *******************
+
 printRandGedicht :: Gedichte -> Int -> String
 printRandGedicht sammlung indx = 
     let --f = getLength (gedichte sammlung)
-        g = getIntro (gedichte sammlung !!(indx-1))-- replace by random number
-        h = getBody (gedichte sammlung !!(indx-1)) --replace by random number
-    in g ++ h   --"\n " ++ g ++ "\n" ++ h ++ "\n" --why is linebreak not working? now in g & h
-                -- can i call do recursion with different input types? if parameter int =; if parameter string= etc?
+        g = getIntro (gedichte sammlung !!(indx-1))
+        h = getBody (gedichte sammlung !!(indx-1)) 
+    in g ++ h  
 
 
--- fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
-fallOverAndDie :: String -> IO a
-fallOverAndDie err = do putStrLn err
-                        exitWith (ExitFailure 1)
-
-
-date :: UTCTime -> (Integer,Int,Int) --Year is type Integer
-date = toGregorian .utctDay -- will output f.e (2021,8,5)
-
-
--- generate random Number from Date & Time
+-- *** generate random Number from Date & Time
 dateNumber :: (Integer,Int,Int) -> UTCTime ->Int
 dateNumber (y,m,d) time = a + b + c + e 
     where a = fromIntegral(diffTimeToPicoseconds (utctDayTime time))
@@ -99,52 +96,85 @@ dateNumber (y,m,d) time = a + b + c + e
           c =  m
           e =  fromIntegral y
 
---check if num/Queersumme small enough for bound
+-- *** check if num/Queersumme small enough for bound
 randomNumbInBound :: Int -> Int -> Int
 randomNumbInBound numb bound 
     | numb <= bound = numb
     | otherwise = randomNumbInBound (crossSum numb) bound --get crossSum until small enough
  
--- Queersumme
-crossSum :: Int -> Int
-crossSum 0 = 0
-crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
 
 
+-- ********************** Helper Functions *******************
 
--- if delimiter needed use strListToStringWith
+
+date :: UTCTime -> (Integer,Int,Int) --Year is type Integer
+date = toGregorian .utctDay -- will output f.e (2021,8,5)
+
+-- *** if delimiter needed use strListToStringWith
 strListToString :: [String] -> String -- ["erster Satz","zweiter Satz linebreak","dritter Satz"] -- unlines does same check: https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:unlines
 strListToString [] = []
 strListToString (x:xs) = x ++ strListToString xs --needs putStr to format in ghci
 --listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line, 
 
---if no delimiter, use listToString
+-- *** if no delimiter, use listToString
 strListToStringWith :: [String] -> String -> String 
 strListToStringWith [] _ = []
 --strListToStringWith [x] _ = x --last Element does not get \n
 strListToStringWith (x:xs) delim = delim ++ x ++ strListToStringWith xs delim 
-{--
-get day, get Time, get time since runghc started (or other "random" values)
-put into Range of 0, getLength (Gedichte Gedicht)
---}
+
+-- *** Queersumme
+crossSum :: Int -> Int
+crossSum 0 = 0
+crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
+
+{-- try finding more efficience than ++
+mergeLists :: [a] -> [a] -> [a]
+mergeLists [] [] = []
+mergeLists [] y = y
+mergeLists x []  = x
+--mergeLists (x:xs) ys = x: mergeLists xs ys 
+mergeLists [x] [y] = [x, y] --}
 
 
+-- *** fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
+fallOverAndDie :: String -> IO a
+fallOverAndDie err = do putStrLn err
+                        exitWith (ExitFailure 1)
+
+
+
+-- ********************** Change Data in Json File *******************
+changeAmountRead :: Gedichte -> Int ->Gedichte
+changeAmountRead oldJson indx = do
+    let haystack = gedichte oldJson
+    let needle = haystack !!(indx-1) -- printRandGedich printed auch bei index-1
+    let poem = [Gedicht {autor=autor needle, titel=titel needle, gedicht=gedicht needle, jahr=jahr needle,ausgelesen= ausgelesen needle,anzahlGelesen=anzahlGelesen needle+1}]
+    let headStack = Prelude.init(Prelude.take indx haystack) -- returns List without last item
+    let tailStack = Prelude.drop indx haystack
+    --let newstack = mergeLists headStack (mergeLists poem tailStack)
+    let newstack = headStack ++ poem ++ tailStack -- ++ not so good for very long lists, when is it very long?
+    let newJson = Gedichte newstack
+    newJson
+        {--
+        get list of old Gedichte oldJson
+        get Gedicht at ListIndex indx from oldJson
+        make new Gedicht with newAmountRead
+        make new List same as oldJson, but with replaced Gedicht&NewAmountRead at Index
+        return Gedichte
+        or write Gedichte to file
+        --}
+
+
+
+
+-- ********************** Main *******************
 main :: IO ()
 main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/json
-    --content <- contents
-    --putStr content --works because IO box is now opened ?
-    --print contents -- doesn't work because of ´unopenable´ IO Box? IO is not function, but action. So we need to run it before printing. <- basically is "run" operator 
-    -- print jsonDate 
-    --parsedData <- (eitherDecode <$> jsonData) :: IO (Either String [Gedicht]) --gedichte3.json
     current <- getCurrentTime -- not TimeZoned
     --let PicosecondsSince = diffTimeToPicoseconds (utctDayTime current) --10^-12 for Pico to second
     parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
     case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either   otherwise will return "Left ..." or "Right..."
        Left err -> fallOverAndDie ("Parsing Error! Programm will be stopped because: "++err)
-       --Right parsed -> print parsed -- print (and not Strln because print calls show to turn into String)
-       --Right parsed -> print ( gedichte parsed) -- prints gedichte from parsed (::Gedichte)
-       --Right parsed -> print ( getIntro (gedichte parsed)) -- prints getIntro for (gedichte parsed), nur bei non-Array Child Object von Gedicht   
-       --Right parsed -> print ( getIntro (gedichte parsed!!1) ++ show(getLength (gedichte parsed))) -- prints getIntro for (gedichte (parsed index 1)) -- remember index 0 is head
        Right parsed -> do 
            putStrLn "parsing done" --print $ printRandGedicht parsed -- put into variable but NOT print possible?
            putStrLn ("Wilkommen in der Gedichte Sammlung! \n Zur Zeit stehen " ++ show (getLength(gedichte parsed)) ++ " Gedichte zur Auswahl \n")
@@ -160,6 +190,9 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                      | user == "n" = putStr "Sehr Schade, Sie verpassen was"
                      | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur 'y' für ja und 'n' für nein"
            check
+           let newJson = encode (changeAmountRead parsed rand)
+           --print (changeAmountRead parsed rand)
+           BS.writeFile file2 newJson -- g3.json wird nicht aktualisiert ?
            
 
 
@@ -169,15 +202,18 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
         ***-> make own random number
         ***-> make random number with Range of Length
         -> Error testing? Can runtime err occur?
-    Change read 
-    make own "Date" - Type?
+    
+    Write to an FromJson myself? --> !!! Encoded Json has different form from original (tags are a mess) 
     repeat questions in main (without repeating parse possible? reasonable? Repeat only right? Reasonable until poems can get added?)
     print choosable options to cmd possible? 
     pretty print function instead of adding "\n\t" to String
+    
+
     xxx get length of Gedicht -> Gedichte
     xxx print out Data at length
+    xxx Change read 
     xxx print out more Data than just Titel & Autor
     xxx think about Poem formatting / reading / printing ; seperate by ,.;:? use \n ? no new line in JSON source accepted 
             for human readableness use List of Strings for Lines?
-
+    ----make own "Date" - Type?
 --} 

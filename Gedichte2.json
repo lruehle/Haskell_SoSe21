@@ -7,7 +7,7 @@
             "gedicht" : ["Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"],
             "jahr" : 188873,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false" 
+            "anzahlGelesen" : 0 
         },
         {
             "autor" : "Eichendorf 2",
@@ -15,7 +15,7 @@
             "gedicht" : ["Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"],
             "jahr" : 188873,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false" 
+            "anzahlGelesen" : 0 
         },
         {
             "autor" : "ajb at spamcop.net",
@@ -30,7 +30,7 @@
                 "Because somebody, somewhere, did not like the name.", "The simple, recognizable,", "Unrealizable,", "Deep, unattainable, singular Name.","\n"],
             "jahr" : 2008,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false" 
+            "anzahlGelesen" : 0 
             
         },
         {
@@ -40,7 +40,7 @@
                 "singt im Traum","auch Fische singen mit","denn es ist Brauch","in solcher Nacht","Unmögliches zu tun","\n"],
             "jahr" : 1956,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Wilhelm Busch",
@@ -50,7 +50,7 @@
                 "Will noch ein wenig quinquilieren","Und lustig pfeifen wie zuvor.","Der Vogel, scheint mir, hat Humor.","\n"],
             "jahr" : 1874,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Joachim Ringelnatz",
@@ -59,7 +59,7 @@
                 "\n","So will man oft und kann doch nicht", "Und leistet dann recht gern Verzicht.", "\n"],
             "jahr" : 1933,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Joachim Ringelnatz",
@@ -67,7 +67,7 @@
             "gedicht" : ["War einmal ein Bumerang;","War ein Weniges zu lang.","Bumerang flog ein Stück,","Aber kam nicht mehr zurück.","Publikum ­ noch stundenlang ","Wartete auf Bumerang.", "\n"],
             "jahr" : 1923,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Ludwig Uhland",
@@ -98,7 +98,7 @@
             "Von der Wurzel bis zum Gipfel.", "\n"],
             "jahr" : 1811,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Theodor Storm",
@@ -110,7 +110,7 @@
                 "Wie grün der Wald, den ich durchschritt.","\n"],
             "jahr" : 1850,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "Georg Trakl",
@@ -131,7 +131,23 @@
                 "Auf dem Tische Brot und Wein.","\n"],
             "jahr" : 1913,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
+        },
+        {
+            "autor" : "Heinrich Heine",
+            "titel" : "Das Fräulein stand am Meere",
+            "gedicht" : ["Das Fräulein stand am Meere",
+            "Und seufzte lang und bang,",
+            "Es rührte sie so sehre",
+           " Der Sonnenuntergang.","\n",
+            
+            "Mein Fräulein! sein Sie munter,",
+            "Das ist ein altes Stück;",
+            "Hier vorne geht sie unter",
+            "Und kehrt von hinten zurück.","\n"],
+            "jahr" : 1832,
+            "ausgelesen" : false,
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "",
@@ -139,7 +155,7 @@
             "gedicht" : [],
             "jahr" : 188873,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         },
         {
             "autor" : "dsmith@lucy.cs.waikato.ac.nz",
@@ -157,7 +173,7 @@
                 "Lazy lady of many shapes, you've got class.","\n"],
             "jahr" : 1995,
             "ausgelesen" : false,
-            "ausgelesenAm" : "false"
+            "anzahlGelesen" : 0
         }
 
     ]
