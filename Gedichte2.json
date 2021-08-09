@@ -4,15 +4,15 @@
         {
             "autor" : "Eichendorf",
             "titel" : "Lied",
-            "gedicht" : ["Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"],
+            "gedicht" : ["Schläft ein Lied in allen Dingen,", "die da Träumen fort und fort.","Und die Welt hebt an zu singen,", "triffst du nur das Zauberwort"],
             "jahr" : 188873,
-            "ausgelesen" : false,
+            "ausgelesen" : true,
             "anzahlGelesen" : 0 
         },
         {
             "autor" : "Eichendorf 2",
             "titel" : "Lied 2",
-            "gedicht" : ["Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"],
+            "gedicht" : ["Schläft ein Lied in allen Dingen"],
             "jahr" : 188873,
             "ausgelesen" : false,
             "anzahlGelesen" : 0 
@@ -139,7 +139,7 @@
             "gedicht" : ["Das Fräulein stand am Meere",
             "Und seufzte lang und bang,",
             "Es rührte sie so sehre",
-           " Der Sonnenuntergang.","\n",
+            "Der Sonnenuntergang.","\n",
             
             "Mein Fräulein! sein Sie munter,",
             "Das ist ein altes Stück;",

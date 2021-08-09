@@ -1,12 +1,15 @@
 {
     "gedichte": [
         {
-            "ausgelesen": false,
+            "ausgelesen": true,
             "jahr": 188873,
-            "anzahlGelesen": 0,
+            "anzahlGelesen": 2,
             "autor": "Eichendorf",
             "gedicht": [
-                "Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"
+                "Schläft ein Lied in allen Dingen,",
+                "die da Träumen fort und fort.",
+                "Und die Welt hebt an zu singen,",
+                "triffst du nur das Zauberwort"
             ],
             "titel": "Lied"
         },
@@ -16,7 +19,7 @@
             "anzahlGelesen": 0,
             "autor": "Eichendorf 2",
             "gedicht": [
-                "Schläft ein Lied in allen Dingen, die da Träumen fort und fort. Und die Welt hebt an zu singen, triffst du nur das Zauberwort"
+                "Schläft ein Lied in allen Dingen"
             ],
             "titel": "Lied 2"
         },
@@ -184,7 +187,7 @@
         {
             "ausgelesen": false,
             "jahr": 1850,
-            "anzahlGelesen": 1,
+            "anzahlGelesen": 0,
             "autor": "Theodor Storm",
             "gedicht": [
                 "Ein Blatt aus sommerlichen Tagen,",
@@ -229,7 +232,7 @@
                 "Das Fräulein stand am Meere",
                 "Und seufzte lang und bang,",
                 "Es rührte sie so sehre",
-                " Der Sonnenuntergang.",
+                "Der Sonnenuntergang.",
                 "\n",
                 "Mein Fräulein! sein Sie munter,",
                 "Das ist ein altes Stück;",
