@@ -56,7 +56,7 @@ instance ToJSON Gedichte
 
 
 file :: FilePath
-file = "Gedichte3.json"
+file = "Gedichte2.json"
 
 file2 :: FilePath
 file2 = "Gedichte3.json"
@@ -115,9 +115,9 @@ dateNumber (y,m,d) time = a + b + c + e
 -- *** check if num/Queersumme small enough for bound
 randomNumbInBound :: Int -> Int -> Int
 randomNumbInBound numb bound
-    | numb <= bound = numb
+    | numb == 0 = 0 --ever reached?
+    | numb <= bound = numb --index will be -1
     | otherwise = randomNumbInBound (crossSum numb) bound --get crossSum until small enough
-
 
 
 
@@ -144,7 +144,6 @@ crossSum :: Int -> Int
 crossSum 0 = 0
 crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
 
-
 -- *** finds gedicht in Gedichte and increments Int with each recursion; c should always be 0 ; runtime block?
 {-getIndex :: [Gedicht] -> Gedicht -> Int -> Int
 getIndex a b c 
@@ -154,17 +153,17 @@ getIndex a b c
 
 -- *** returns the index of the first element in [String]/hay matching String/needle
 getFirstIndex :: String -> [String] -> Int --needs f.e ["Eichendorf", "Ringelnatz"] als [String]
-getFirstIndex needle hay = head $ elemIndices needle hay --returns a list of indices
+getFirstIndex needle hay = head $ elemIndices needle hay --returns a list of indexes
 --getIndex _ [] = -1
 --getIndex a (x:xs) 
   --  | a == x = 
 
--- *** gibt liste mit ausgelesen = False zurück
+-- *** gibt liste mit "ausgelesen"-werten zurück
 ausgelesenToList :: [Gedicht] -> [String]
 ausgelesenToList = map (show . ausgelesen) --show (ausgelesen x) : ausgelesenToList xs
 
 
-{-- try finding more efficience than ++
+{-- try finding more efficience than ++ -List 
 mergeLists :: [a] -> [a] -> [a]
 mergeLists [] [] = []
 mergeLists [] y = y
@@ -181,10 +180,13 @@ fallOverAndDie err = do putStrLn err
 
 
 -- ********************** Change Data in Json File *******************
+
+-- *** changes ausgelesen to True & increments anzahlGelesen by 1
+    -- cuts List into Head and Tail at Index, copies old Element with new Values, sticks all parts back together
 changeAmountRead :: Gedichte -> Int ->Gedichte
 changeAmountRead oldJson indx = do
     let haystack = gedichte oldJson
-    let needle = haystack !!(indx-1) -- printRandGedich printed auch bei index-1
+    let needle = haystack !!(indx-1) -- printRandGedicht printed auch bei index-1
     let poem = [Gedicht {autor=autor needle, titel=titel needle, gedicht=gedicht needle, jahr=jahr needle,ausgelesen= True,anzahlGelesen=anzahlGelesen needle+1}]
     let headStack = Prelude.init(Prelude.take indx haystack) -- returns List without last item
     let tailStack = Prelude.drop indx haystack
@@ -192,14 +194,6 @@ changeAmountRead oldJson indx = do
     let newstack = headStack ++ poem ++ tailStack -- ++ not so good for very long lists, when is it very long?
     let newJson = Gedichte newstack
     newJson
-        {--
-        get list of old Gedichte oldJson
-        get Gedicht at ListIndex indx from oldJson
-        make new Gedicht with newAmountRead
-        make new List same as oldJson, but with replaced Gedicht&NewAmountRead at Index
-        return Gedichte
-        or write Gedichte to file
-        --}
 
 
 
@@ -221,7 +215,7 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
            putStrLn ("random Number "++ show(randomNumbInBound(dateNumber (date current)current) length))
            let rand = randomNumbInBound(dateNumber (date current) current) length
            putStrLn "Was möchten Sie tun?\nein zufälliges Gedicht lesen? (r) \t\t ein ungelesenes Gedicht lesen? (u)\t\t Gedichte eines Autors lesen? (a)"
-           putStrLn $ "ausgelesen: "++ show(ausgelesenToList listGedichte)
+           --putStrLn $ "ausgelesen: "++ show(ausgelesenToList listGedichte)
            putStrLn $ "hi"++ show(getFirstIndex "False" (ausgelesenToList listGedichte))
            --putStrLn ( "bla"++show(getIndex listGedichte (listGedichte!!3) 0))
            user <- getChar
@@ -230,9 +224,10 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                         BS.writeFile file2 newJson
                         putStr ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß \n" ++ printGedichtAt listGedichte rand)
                      | user == 'u' = do
-                        --let indx = getFirstIndex "False" (ausgelesenToList listGedichte)
-                        let newJson = encode (changeAmountRead parsed (getFirstIndex "False" (ausgelesenToList listGedichte)))
+                        let indx = getFirstIndex "False" (ausgelesenToList listGedichte)
+                        let newJson = encode (changeAmountRead parsed (indx+1))
                         BS.writeFile file2 newJson
+                        --putStr ("Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte indx)
                         putStr ("Hier ein bisher ungelesenes Gedicht" ++ firstUnread listGedichte)
                      | user == 'a' = putStr "Welchen Autor wollen sie gerne lesen?"
                      | user == 'n' = putStr "Sehr Schade, Sie verpassen was"
@@ -246,22 +241,28 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
 
 
 {-- next up:
-    make random number from length
-        ***-> make own random number
-        ***-> make random number with Range of Length
-        -> Error testing? Can runtime err occur?
+    
     
     Write to an FromJson myself? --> !!! Encoded Json has different form from original (tags are a mess) 
     repeat questions in main (without repeating parse possible? reasonable? Repeat only right? Reasonable until poems can get added?)
-    print choosable options to cmd possible? 
-    pretty print function instead of adding "\n\t" to String
+    check out indices (-1 etc) -> better way?
+    replace FirstUnread function by PrintGedicht (getFirstIndex ausgelesenToList)
     add more choices (read out unread poem, read poem numb..., read poem by artist..)
-
+    
+    done
     xxx get length of Gedicht -> Gedichte
     xxx print out Data at length
     xxx Change read 
     xxx print out more Data than just Titel & Autor
     xxx think about Poem formatting / reading / printing ; seperate by ,.;:? use \n ? no new line in JSON source accepted 
             for human readableness use List of Strings for Lines?
+    xxx make random number from length
+        ***-> make own random number
+        ***-> make random number with Range of Length
+        -> Error testing? Can runtime err occur?
+    
+    maybe
     ----make own "Date" - Type?
+    ----print choosable options to cmd possible? 
+    ----pretty print function instead of adding "\n\t" to String
 --}

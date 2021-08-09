@@ -3,7 +3,7 @@
         {
             "ausgelesen": true,
             "jahr": 188873,
-            "anzahlGelesen": 2,
+            "anzahlGelesen": 0,
             "autor": "Eichendorf",
             "gedicht": [
                 "Schläft ein Lied in allen Dingen,",
@@ -135,9 +135,9 @@
             "titel": "Die Ameisen"
         },
         {
-            "ausgelesen": false,
+            "ausgelesen": true,
             "jahr": 1923,
-            "anzahlGelesen": 0,
+            "anzahlGelesen": 1,
             "autor": "Joachim Ringelnatz",
             "gedicht": [
                 "War einmal ein Bumerang;",
