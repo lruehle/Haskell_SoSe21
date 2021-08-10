@@ -1,7 +1,7 @@
 {
     "gedichte": [
         {
-            "ausgelesen": true,
+            "ausgelesen": false,
             "jahr": 188873,
             "anzahlGelesen": 0,
             "autor": "Eichendorf",
@@ -9,19 +9,51 @@
                 "Schläft ein Lied in allen Dingen,",
                 "die da Träumen fort und fort.",
                 "Und die Welt hebt an zu singen,",
-                "triffst du nur das Zauberwort"
+                "triffst du nur das Zauberwort",
+                "\n"
             ],
             "titel": "Lied"
         },
         {
             "ausgelesen": false,
-            "jahr": 188873,
+            "jahr": 1817,
             "anzahlGelesen": 0,
-            "autor": "Eichendorf 2",
+            "autor": "Eichendorf",
             "gedicht": [
-                "Schläft ein Lied in allen Dingen"
+                "Schweigt der Menschen laute Lust:",
+                "Rauscht die Erde wie in Träumen",
+                "wunderbar mit allen Bäumen,",
+                "was dem Herzen kaum bewußt,",
+                "alte Zeiten, linde Trauer,",
+                "und es schweifen leise Schauer",
+                "wetterleuchtend durch die Brust.",
+                "\n"
             ],
-            "titel": "Lied 2"
+            "titel": "Der Abend"
+        },
+        {
+            "ausgelesen": false,
+            "jahr": 1817,
+            "anzahlGelesen": 0,
+            "autor": "Eichendorf",
+            "gedicht": [
+                "Fliegt der erste Morgenstrahl",
+                "Durch das stille Nebeltal,",
+                "Rauscht erwachend Wald und Hügel:",
+                "Wer da fliegen kann, nimmt Flügel!",
+                "\n",
+                "Und sein Hütlein in die Luft",
+                "Wirft der Mensch vor Lust und ruft:",
+                "Hat Gesang doch auch noch Schwingen,",
+                "Nun, so will ich fröhlich singen!",
+                "\n",
+                "Hinaus, o Mensch, weit in die Welt,",
+                "Bangt dir das Herz in krankem Mut;",
+                "Nichts ist so trüb in Nacht gestellt,",
+                "Der Morgen leicht machts wieder gut.",
+                "\n"
+            ],
+            "titel": "Der Morgen"
         },
         {
             "ausgelesen": false,
@@ -117,6 +149,33 @@
         },
         {
             "ausgelesen": false,
+            "jahr": 1874,
+            "anzahlGelesen": 0,
+            "autor": "Wilhelm Busch",
+            "gedicht": [
+                "Sie war ein Blümlein hübsch und fein,",
+                "Hell aufgeblüht im Sonnenschein.",
+                "Er war ein junger Schmetterling,",
+                "Der selig an der Blume hing.",
+                "\n",
+                "Oft kam ein Bienlein mit Gebrumm",
+                "Und nascht und säuselt da herum.",
+                "Oft kroch ein Käfer kribbelkrab",
+                "Am hübschen Blümlein auf und ab.",
+                "\n",
+                "Ach Gott, wie das dem Schmetterling",
+                "So schmerzlich durch die Seele ging.",
+                "\n",
+                "Doch was am meisten ihn entsetzt,",
+                "Das Allerschlimmste kam zuletzt.",
+                "Ein alter Esel fraß die ganze",
+                "Von ihm so heißgeliebte Pflanze.",
+                "\n"
+            ],
+            "titel": "Sie war ein Blümlein"
+        },
+        {
+            "ausgelesen": false,
             "jahr": 1933,
             "anzahlGelesen": 0,
             "autor": "Joachim Ringelnatz",
@@ -135,9 +194,9 @@
             "titel": "Die Ameisen"
         },
         {
-            "ausgelesen": true,
+            "ausgelesen": false,
             "jahr": 1923,
-            "anzahlGelesen": 1,
+            "anzahlGelesen": 0,
             "autor": "Joachim Ringelnatz",
             "gedicht": [
                 "War einmal ein Bumerang;",
@@ -200,9 +259,9 @@
             "titel": "Ein grünes Blatt"
         },
         {
-            "ausgelesen": false,
+            "ausgelesen": true,
             "jahr": 1913,
-            "anzahlGelesen": 0,
+            "anzahlGelesen": 1,
             "autor": "Georg Trakl",
             "gedicht": [
                 "Wenn der Schnee ans Fenster fällt,",
@@ -241,6 +300,25 @@
                 "\n"
             ],
             "titel": "Das Fräulein stand am Meere"
+        },
+        {
+            "ausgelesen": false,
+            "jahr": 1802,
+            "anzahlGelesen": 0,
+            "autor": "Clemens Brentano",
+            "gedicht": [
+                "Hör, es klagt die Flöte wieder,",
+                "und die kühlen Brunnen rauschen!",
+                "Golden weh'n die Töne nieder,",
+                "stille, stille, laß uns lauschen!",
+                "\n",
+                "Holdes Bitten, mild Verlangen,",
+                "wie es süß zum Herzen spricht!",
+                "Durch die Nacht, die mich umfangen,",
+                "blickt zu mir der Töne Licht!",
+                "\n"
+            ],
+            "titel": "Abenständchen"
         },
         {
             "ausgelesen": false,

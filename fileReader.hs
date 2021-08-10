@@ -85,10 +85,17 @@ getLength (_:xs) = 1 + getLength xs
 -- *** prints Gedicht Intro & body at Index 
 printGedichtAt :: [Gedicht] -> Int -> String
 printGedichtAt sammlung indx =
-    let --f = getLength (gedichte sammlung)
+    let
         g = getIntro (sammlung !!indx)
         h = getBody (sammlung !!indx)
-    in g ++ h
+    in noticeMe $ g ++ h
+
+printGedichteAt :: [Gedicht] -> [Int] -> [String]
+printGedichteAt sammlung = map (printGedichtAt sammlung)
+
+
+
+
 
 {-- obsolete ?
 -- *** returns first unread Poem
@@ -160,6 +167,11 @@ getFirstIndex :: String -> [String] -> Maybe Int --needs f.e ["Eichendorf", "Rin
 getFirstIndex needle hay = listToMaybe $ elemIndices needle hay -- returns List of indices of String in List, and takes first Element from it
 
 
+-- *** returns List with Indices of all Elements in [String]/hay (f.e.["Eichendorf","Ringelnatz"]) matching String/needle (f.e "Eichendorf")
+getAllIndices :: String -> [String] -> [Int]
+getAllIndices = elemIndices -- returns List of indices of String in List
+
+
 
 -- *** gibt liste mit "ausgelesen"-werten zurück => ["True","True","False","True","False",...]
 ausgelesenToList :: [Gedicht] -> [String]
@@ -176,8 +188,12 @@ keyToList (x:xs) needle = case needle of
     "ausgelesen" ->  show ( ausgelesen x) : keyToList xs needle
     "anzahlGelesen" ->  show ( anzahlGelesen x) : keyToList xs needle
     _-> []
-    
 
+
+noticeMe:: String -> String
+noticeMe a= "\n    ..........................................\n " ++ a ++"\n    ..........................................\n"
+--noticeMe a= "\n    ******************************************\n " ++ a ++"\n    ******************************************\n"
+--noticeMe a= "\n\t -------------------------\n " ++ a ++"\n\t -------------------------\n"
 
 -- *** fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
 fallOverAndDie :: String -> IO a
@@ -203,6 +219,11 @@ changeAmountRead oldJson indx = do
     let newJson = Gedichte newstack
     newJson
 
+changeAmountsRead :: Gedichte -> [Int] -> Gedichte
+changeAmountsRead json [] = json
+changeAmountsRead json [x] = changeAmountRead json x
+changeAmountsRead json (x:xs) = changeAmountsRead (changeAmountRead json x) xs
+
 
 
 
@@ -218,7 +239,7 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
            putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n"
            let length = getLength listGedichte
            let rand = randomNumbInBound(dateNumber (date current) current) length
-           putStrLn "Was möchten Sie tun?\n\t\t ein zufälliges Gedicht lesen? (r) \n\t\t ein ungelesenes Gedicht lesen? (u)\n\t\t Gedichte eines Autors lesen? (a)"
+           putStrLn "Was möchten Sie tun?\n\t\t ein zufälliges Gedicht lesen? (r) \n\t\t ein ungelesenes Gedicht lesen? (u)\n\t\t Gedichte eines Autors lesen? (a) \n\t\t Die Anwendung verlassen (q)"
            user <- getLine
            let check | user == "r" = do
                         let newJson = encode (changeAmountRead parsed rand)
@@ -237,17 +258,33 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                      | user == "a" = do
                         putStrLn "Welchen Autor wollen sie gerne lesen?"
                         autor <- getLine
-                        putStrLn $ "Moment, ich suche nach Gedichten von " ++ autor
-                        let indx2 = getFirstIndex autor (keyToList listGedichte "autor")
+                        putStrLn $ noticeMe $"Moment, ich suche nach Gedichten von " ++ autor
+                        let keys = keyToList listGedichte "autor"
+                        let indx_many = getAllIndices autor keys
+                        case indx_many of
+                            [] -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles keys) "\n\t| " ++ "\n"
+                            [x] -> do
+                                let newJson = encode (changeAmountRead parsed x)
+                                BS.writeFile file2 newJson
+                                putStrLn $"Hier ein Gedicht von: "++ autor ++ "\n" ++ printGedichtAt listGedichte x
+                            (x:xs) -> do
+                                   --let read = changeAmountsRead parsed indx_many
+                                   let newJson = encode $changeAmountsRead parsed indx_many
+                                   BS.writeFile file2 newJson
+                                   putStrLn $"Super! Ich habe sogar mehrere Gedichte von "++ autor ++ "\n" ++ strListToStringWith (printGedichteAt listGedichte indx_many) "\n\t"
+                        {- let indx_fst = getFirstIndex autor keys
                         --print indx2
-                        case indx2 of
-                            Just i -> do 
-                                --putStrLn $"autorIndex"++ show(keyToList listGedichte "autor")
+                        case indx_fst of
+                            Just i -> do
+                                --putStrLn $"autorIndex"++ show keys
                                 let newJson = encode (changeAmountRead parsed i)
                                 BS.writeFile file2 newJson
-                                putStr ("Hier ein Gedicht von: "++ autor ++ "\n" ++ printGedichtAt listGedichte i)
-                            Nothing -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles $ keyToList listGedichte "autor") "\n\t" ++ "\n"
-                     | user == "n" = putStr "Sehr Schade, Sie verpassen was"
+                                putStrLn $"Hier ein Gedicht von: "++ autor ++ "\n" ++ printGedichtAt listGedichte i
+                            Nothing -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles keys) "\n\t| " ++ "\n"
+                     -- | user == "n" = putStr "Sehr Schade, Sie verpassen was"-}
+                     | user == "q" = do
+                        putStr "Auf wiedersehen!"
+                        exitSuccess
                      | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'n' für nichts"
            check
 
@@ -266,7 +303,8 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
             -> get author by firstname OR lastname
 
     Sprach-Tag hinzufügen (für Filter)? -> on Top: Gedichte mehrsprachig ermöglichen?
-
+    ausgelesenToList -> KeytoList
+            -> Paramaters as Data
 
 
     done
