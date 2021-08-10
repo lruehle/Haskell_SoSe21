@@ -15,8 +15,9 @@ import Data.Time.Clock.POSIX
 import Data.Time.Calendar
 import Data.Time.Calendar.WeekDate
 import Data.List
+import Data.Map (fromList)
 import qualified Data.ByteString.Lazy as BS
-import GHC.Data.Maybe (fromJust, fromMaybe)
+import GHC.Data.Maybe (fromJust, fromMaybe, listToMaybe)
 import GHC.Tc.Solver.Monad (getInertCans)
 
 
@@ -36,6 +37,8 @@ data Gedicht = Gedicht {
         anzahlGelesen :: Int
     } deriving (Show, Generic, Eq)
 
+data Keys = Au | Ti | Ged | Jahr | Ausg | Anz deriving (Show,Eq)
+data Pair = Keys String deriving (Show, Eq)
 
 instance FromJSON Gedicht
 {-instance FromJSON Gedicht where
@@ -83,11 +86,11 @@ getLength (_:xs) = 1 + getLength xs
 printGedichtAt :: [Gedicht] -> Int -> String
 printGedichtAt sammlung indx =
     let --f = getLength (gedichte sammlung)
-        g = getIntro (sammlung !!(indx-1))
-        h = getBody (sammlung !!(indx-1))
+        g = getIntro (sammlung !!indx)
+        h = getBody (sammlung !!indx)
     in g ++ h
 
-
+{-- obsolete ?
 -- *** returns first unread Poem
 firstUnread :: [Gedicht] -> String
 firstUnread [] = "keine ungelesenen Gedichte"
@@ -95,12 +98,13 @@ firstUnread (x:xs)
     | "ausgelesen = False" `isInfixOf` show x = getIntro x ++ getBody x
     | otherwise = firstUnread xs
 
--- *** returns String with unread Poems 
-listOfUnread :: [Gedicht] -> String
+
+-- *** returns String with all unread Poems 
+listOfUnread :: [Gedicht] -> [String]
 listOfUnread [] = []
 listOfUnread (x:xs)
-    | "ausgelesen = False" `isInfixOf` show x = "\n" ++ getIntro x ++ getBody x ++ listOfUnread xs
-    | otherwise = listOfUnread xs
+    | "ausgelesen = False" `isInfixOf` show x = show("\n" ++ getIntro x ++ getBody x) : listOfUnread xs
+    | otherwise = listOfUnread xs -}
 
 -- ********************** Create Random Number *******************
 
@@ -112,11 +116,11 @@ dateNumber (y,m,d) time = a + b + c + e
           c =  m
           e =  fromIntegral y
 
--- *** check if num/Queersumme small enough for bound
+-- *** check if num/Queersumme small enough for bound; bound is length of list => List indx + 1
 randomNumbInBound :: Int -> Int -> Int
 randomNumbInBound numb bound
     | numb == 0 = 0 --ever reached?
-    | numb <= bound = numb --index will be -1
+    | numb <= bound = numb-1 --numb is now == indx
     | otherwise = randomNumbInBound (crossSum numb) bound --get crossSum until small enough
 
 
@@ -144,38 +148,42 @@ crossSum :: Int -> Int
 crossSum 0 = 0
 crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
 
--- *** finds gedicht in Gedichte and increments Int with each recursion; c should always be 0 ; runtime block?
-{-getIndex :: [Gedicht] -> Gedicht -> Int -> Int
-getIndex a b c 
-    | null a = -1
-    | a!!c == b = c
-    | otherwise = getIndex a b c+1 -}
+
+
+deleteDoubles :: (Eq a, Ord a) => [a] -> [a]
+deleteDoubles = map head . group . sort --same as : map head (group (sort a)) 
+
+
 
 -- *** returns the index of the first element in [String]/hay matching String/needle
-getFirstIndex :: String -> [String] -> Int --needs f.e ["Eichendorf", "Ringelnatz"] als [String]
-getFirstIndex needle hay = head $ elemIndices needle hay --returns a list of indexes
---getIndex _ [] = -1
---getIndex a (x:xs) 
-  --  | a == x = 
+getFirstIndex :: String -> [String] -> Maybe Int --needs f.e ["Eichendorf", "Ringelnatz"] als [String]
+getFirstIndex needle hay = listToMaybe $ elemIndices needle hay -- returns List of indices of String in List, and takes first Element from it
 
--- *** gibt liste mit "ausgelesen"-werten zurück
+
+
+-- *** gibt liste mit "ausgelesen"-werten zurück => ["True","True","False","True","False",...]
 ausgelesenToList :: [Gedicht] -> [String]
 ausgelesenToList = map (show . ausgelesen) --show (ausgelesen x) : ausgelesenToList xs
 
 
-{-- try finding more efficience than ++ -List 
-mergeLists :: [a] -> [a] -> [a]
-mergeLists [] [] = []
-mergeLists [] y = y
-mergeLists x []  = x
---mergeLists (x:xs) ys = x: mergeLists xs ys 
-mergeLists [x] [y] = [x, y] --}
+keyToList :: [Gedicht] -> String -> [String]
+keyToList [] _ = []
+keyToList (x:xs) needle = case needle of
+    "autor" ->   autor x : keyToList xs needle
+    "titel" ->  titel x : keyToList xs needle
+    --"gedicht" ->  gedicht x : keyToList xs needle --gedicht ist List
+    "jahr" ->   show (jahr x) : keyToList xs needle
+    "ausgelesen" ->  show ( ausgelesen x) : keyToList xs needle
+    "anzahlGelesen" ->  show ( anzahlGelesen x) : keyToList xs needle
+    _-> []
+    
 
 
 -- *** fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
 fallOverAndDie :: String -> IO a
 fallOverAndDie err = do putStrLn err
                         exitWith (ExitFailure 1)
+
 
 
 
@@ -186,10 +194,10 @@ fallOverAndDie err = do putStrLn err
 changeAmountRead :: Gedichte -> Int ->Gedichte
 changeAmountRead oldJson indx = do
     let haystack = gedichte oldJson
-    let needle = haystack !!(indx-1) -- printRandGedicht printed auch bei index-1
+    let needle = haystack !!indx -- printRandGedicht printed auch bei index-1
     let poem = [Gedicht {autor=autor needle, titel=titel needle, gedicht=gedicht needle, jahr=jahr needle,ausgelesen= True,anzahlGelesen=anzahlGelesen needle+1}]
-    let headStack = Prelude.init(Prelude.take indx haystack) -- returns List without last item
-    let tailStack = Prelude.drop indx haystack
+    let headStack = Prelude.take indx haystack -- cut off till needle
+    let tailStack = Prelude.drop (indx+1) haystack -- cut of after needle
     --let newstack = mergeLists headStack (mergeLists poem tailStack)
     let newstack = headStack ++ poem ++ tailStack -- ++ not so good for very long lists, when is it very long?
     let newJson = Gedichte newstack
@@ -202,53 +210,65 @@ changeAmountRead oldJson indx = do
 main :: IO ()
 main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/json
     current <- getCurrentTime -- not TimeZoned
-    --let PicosecondsSince = diffTimeToPicoseconds (utctDayTime current) --10^-12 for Pico to second
     parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
     case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either   otherwise will return "Left ..." or "Right..."
        Left err -> fallOverAndDie ("Parsing Error! Programm will be stopped because: "++err)
        Right parsed -> do
-           putStrLn "parsing done"
            let listGedichte = gedichte parsed
-           -- putStrLn ("hi \n" ++ show listGedichte)
-           putStrLn ("\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n")
+           putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n"
            let length = getLength listGedichte
-           putStrLn ("random Number "++ show(randomNumbInBound(dateNumber (date current)current) length))
            let rand = randomNumbInBound(dateNumber (date current) current) length
-           putStrLn "Was möchten Sie tun?\nein zufälliges Gedicht lesen? (r) \t\t ein ungelesenes Gedicht lesen? (u)\t\t Gedichte eines Autors lesen? (a)"
-           --putStrLn $ "ausgelesen: "++ show(ausgelesenToList listGedichte)
-           putStrLn $ "hi"++ show(getFirstIndex "False" (ausgelesenToList listGedichte))
-           --putStrLn ( "bla"++show(getIndex listGedichte (listGedichte!!3) 0))
-           user <- getChar
-           let check | user == 'r' = do
+           putStrLn "Was möchten Sie tun?\n\t\t ein zufälliges Gedicht lesen? (r) \n\t\t ein ungelesenes Gedicht lesen? (u)\n\t\t Gedichte eines Autors lesen? (a)"
+           user <- getLine
+           let check | user == "r" = do
                         let newJson = encode (changeAmountRead parsed rand)
                         BS.writeFile file2 newJson
-                        putStr ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß \n" ++ printGedichtAt listGedichte rand)
-                     | user == 'u' = do
+                        putStrLn ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte rand)
+                     | user == "u" = do
                         let indx = getFirstIndex "False" (ausgelesenToList listGedichte)
-                        let newJson = encode (changeAmountRead parsed (indx+1))
-                        BS.writeFile file2 newJson
-                        --putStr ("Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte indx)
-                        putStr ("Hier ein bisher ungelesenes Gedicht" ++ firstUnread listGedichte)
-                     | user == 'a' = putStr "Welchen Autor wollen sie gerne lesen?"
-                     | user == 'n' = putStr "Sehr Schade, Sie verpassen was"
+                        case indx of
+                            Just i ->do
+                                putStrLn ("hi  "++ show i)
+                                let newJson = encode (changeAmountRead parsed i)
+                                BS.writeFile file2 newJson
+                                --putStrLn ("Hier ein bisher ungelesenes Gedicht" ++ firstUnread listGedichte)
+                                putStr ("Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte i)
+                            Nothing -> putStrLn "Alle Gedichte wurden bereits Gelesen :)"
+                     | user == "a" = do
+                        putStrLn "Welchen Autor wollen sie gerne lesen?"
+                        autor <- getLine
+                        putStrLn $ "Moment, ich suche nach Gedichten von " ++ autor
+                        let indx2 = getFirstIndex autor (keyToList listGedichte "autor")
+                        --print indx2
+                        case indx2 of
+                            Just i -> do 
+                                --putStrLn $"autorIndex"++ show(keyToList listGedichte "autor")
+                                let newJson = encode (changeAmountRead parsed i)
+                                BS.writeFile file2 newJson
+                                putStr ("Hier ein Gedicht von: "++ autor ++ "\n" ++ printGedichtAt listGedichte i)
+                            Nothing -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles $ keyToList listGedichte "autor") "\n\t" ++ "\n"
+                     | user == "n" = putStr "Sehr Schade, Sie verpassen was"
                      | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'n' für nichts"
            check
-            --only for random Gedicht, set Index to random
-           --print (changeAmountRead parsed rand)
-           --BS.writeFile file2 newJson -- g3.json wird nicht aktualisiert ?
-
-
 
 
 {-- next up:
     
     
-    Write to an FromJson myself? --> !!! Encoded Json has different form from original (tags are a mess) 
+    Write to and FromJson myself? --> !!! Encoded Json has different form from original (tags are a mess/tags are sorted in alphabetic order) 
     repeat questions in main (without repeating parse possible? reasonable? Repeat only right? Reasonable until poems can get added?)
-    check out indices (-1 etc) -> better way?
-    replace FirstUnread function by PrintGedicht (getFirstIndex ausgelesenToList)
-    add more choices (read out unread poem, read poem numb..., read poem by artist..)
     
+    add more choices (read out unread poem, read poem numb..., read poem by artist..)
+        *** -> get unread single
+            -> get unread plural
+        *** -> get author single
+            -> get author plural
+            -> get author by firstname OR lastname
+
+    Sprach-Tag hinzufügen (für Filter)? -> on Top: Gedichte mehrsprachig ermöglichen?
+
+
+
     done
     xxx get length of Gedicht -> Gedichte
     xxx print out Data at length
@@ -260,9 +280,12 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
         ***-> make own random number
         ***-> make random number with Range of Length
         -> Error testing? Can runtime err occur?
+    xxx replace FirstUnread function by PrintGedicht (getFirstIndex ausgelesenToList)
+    xxx check out indices (-1 etc) -> better way?
     
     maybe
-    ----make own "Date" - Type?
+
     ----print choosable options to cmd possible? 
-    ----pretty print function instead of adding "\n\t" to String
+    ----pretty print function instead of adding "\n\t" to String; Formatting
+    ----cancel Case Sensitivity 
 --}

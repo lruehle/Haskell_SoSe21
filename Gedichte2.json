@@ -4,16 +4,43 @@
         {
             "autor" : "Eichendorf",
             "titel" : "Lied",
-            "gedicht" : ["Schläft ein Lied in allen Dingen,", "die da Träumen fort und fort.","Und die Welt hebt an zu singen,", "triffst du nur das Zauberwort"],
+            "gedicht" : ["Schläft ein Lied in allen Dingen,", "die da Träumen fort und fort.","Und die Welt hebt an zu singen,", "triffst du nur das Zauberwort","\n"],
             "jahr" : 188873,
             "ausgelesen" : true,
             "anzahlGelesen" : 0 
         },
         {
-            "autor" : "Eichendorf 2",
-            "titel" : "Lied 2",
-            "gedicht" : ["Schläft ein Lied in allen Dingen"],
-            "jahr" : 188873,
+            "autor" : "Eichendorf",
+            "titel" : "Der Abend",
+            "gedicht" : ["Schweigt der Menschen laute Lust:",
+            "Rauscht die Erde wie in Träumen",
+            "wunderbar mit allen Bäumen,",
+            "was dem Herzen kaum bewußt,",
+            "alte Zeiten, linde Trauer,",
+            "und es schweifen leise Schauer",
+            "wetterleuchtend durch die Brust.","\n"],
+            "jahr" : 1817,
+            "ausgelesen" : false,
+            "anzahlGelesen" : 0 
+        },
+        {
+            "autor" : "Eichendorf",
+            "titel" : "Der Morgen",
+            "gedicht" : ["Fliegt der erste Morgenstrahl",
+            "Durch das stille Nebeltal,",
+            "Rauscht erwachend Wald und Hügel:",
+            "Wer da fliegen kann, nimmt Flügel!","\n",
+            
+            "Und sein Hütlein in die Luft",
+            "Wirft der Mensch vor Lust und ruft:",
+            "Hat Gesang doch auch noch Schwingen,",
+            "Nun, so will ich fröhlich singen!","\n",
+            
+            "Hinaus, o Mensch, weit in die Welt,",
+            "Bangt dir das Herz in krankem Mut;",
+            "Nichts ist so trüb in Nacht gestellt,",
+            "Der Morgen leicht machts wieder gut.","\n"],
+            "jahr" : 1817,
             "ausgelesen" : false,
             "anzahlGelesen" : 0 
         },
@@ -48,6 +75,30 @@
             "gedicht" : ["Es sitzt ein Vogel auf dem Leim,", "Er flattert sehr und kann nicht heim.","Ein schwarzer Kater schleicht herzu,","Die Krallen scharf, die Augen gluh.",
                 "Am Baum hinauf und immer höher","Kommt er dem armen Vogel näher.", "\n","Der Vogel denkt: Weil das so ist","Und weil mich doch der Kater frisst,","So will ich keine Zeit verlieren,",
                 "Will noch ein wenig quinquilieren","Und lustig pfeifen wie zuvor.","Der Vogel, scheint mir, hat Humor.","\n"],
+            "jahr" : 1874,
+            "ausgelesen" : false,
+            "anzahlGelesen" : 0
+        },
+        {
+            "autor" : "Wilhelm Busch",
+            "titel" : "Sie war ein Blümlein",
+            "gedicht" : ["Sie war ein Blümlein hübsch und fein,",
+            "Hell aufgeblüht im Sonnenschein.",
+            "Er war ein junger Schmetterling,",
+            "Der selig an der Blume hing.", "\n",
+            
+            "Oft kam ein Bienlein mit Gebrumm",
+            "Und nascht und säuselt da herum.",
+            "Oft kroch ein Käfer kribbelkrab",
+            "Am hübschen Blümlein auf und ab.","\n",
+            
+            "Ach Gott, wie das dem Schmetterling",
+            "So schmerzlich durch die Seele ging.","\n",
+            
+            "Doch was am meisten ihn entsetzt,",
+            "Das Allerschlimmste kam zuletzt.",
+            "Ein alter Esel fraß die ganze",
+            "Von ihm so heißgeliebte Pflanze.","\n"],
             "jahr" : 1874,
             "ausgelesen" : false,
             "anzahlGelesen" : 0
@@ -146,6 +197,22 @@
             "Hier vorne geht sie unter",
             "Und kehrt von hinten zurück.","\n"],
             "jahr" : 1832,
+            "ausgelesen" : false,
+            "anzahlGelesen" : 0
+        },
+        {
+            "autor" : "Clemens Brentano",
+            "titel" : "Abenständchen",
+            "gedicht" : ["Hör, es klagt die Flöte wieder,",
+            "und die kühlen Brunnen rauschen!",
+            "Golden weh'n die Töne nieder,",
+            "stille, stille, laß uns lauschen!","\n",
+            
+            "Holdes Bitten, mild Verlangen,",
+            "wie es süß zum Herzen spricht!",
+            "Durch die Nacht, die mich umfangen,",
+            "blickt zu mir der Töne Licht!", "\n"],
+            "jahr" : 1802,
             "ausgelesen" : false,
             "anzahlGelesen" : 0
         },
