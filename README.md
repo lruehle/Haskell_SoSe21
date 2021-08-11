@@ -10,3 +10,5 @@ check UTF-8 library, apparently broken?
 
 Poets from https://wiki.haskell.org/Humor/Poetry
 and https://www.deutschelyrik.de/
+and https://gedichte.xbib.de/
+and https://www.hs-augsburg.de/~harsch/germanica/Chronologie/d_chrono.html

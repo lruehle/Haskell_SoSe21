@@ -3,10 +3,10 @@
     
         {
             "autor" : "Eichendorf",
-            "titel" : "Lied",
+            "titel" : "Wünschelrute",
             "gedicht" : ["Schläft ein Lied in allen Dingen,", "die da Träumen fort und fort.","Und die Welt hebt an zu singen,", "triffst du nur das Zauberwort","\n"],
-            "jahr" : 188873,
-            "ausgelesen" : false,
+            "jahr" : 1838,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0 
         },
         {
@@ -20,7 +20,7 @@
             "und es schweifen leise Schauer",
             "wetterleuchtend durch die Brust.","\n"],
             "jahr" : 1817,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0 
         },
         {
@@ -41,7 +41,7 @@
             "Nichts ist so trüb in Nacht gestellt,",
             "Der Morgen leicht machts wieder gut.","\n"],
             "jahr" : 1817,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0 
         },
         {
@@ -56,7 +56,7 @@
                 "So de-vowel-ified acronym soup is the norm.", "\n", " When you see a developer miffed and distracted,", "Tearing hair out in chunks or pacing without aim,","They are greatly afflicted by anger protracted,",
                 "Because somebody, somewhere, did not like the name.", "The simple, recognizable,", "Unrealizable,", "Deep, unattainable, singular Name.","\n"],
             "jahr" : 2008,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0 
             
         },
@@ -66,7 +66,7 @@
             "gedicht" : ["Der Mond errötet","Kühle durchweht die Nacht","\n","Am Himmel","Zauberstrahlen aus Kristall","\n", "Ein Poem","besucht den Dichter", "\n", "Ein stiller Gott", "schenkt Schlaf", "eine verirrte Lerche",
                 "singt im Traum","auch Fische singen mit","denn es ist Brauch","in solcher Nacht","Unmögliches zu tun","\n"],
             "jahr" : 1956,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -76,7 +76,7 @@
                 "Am Baum hinauf und immer höher","Kommt er dem armen Vogel näher.", "\n","Der Vogel denkt: Weil das so ist","Und weil mich doch der Kater frisst,","So will ich keine Zeit verlieren,",
                 "Will noch ein wenig quinquilieren","Und lustig pfeifen wie zuvor.","Der Vogel, scheint mir, hat Humor.","\n"],
             "jahr" : 1874,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -100,7 +100,7 @@
             "Ein alter Esel fraß die ganze",
             "Von ihm so heißgeliebte Pflanze.","\n"],
             "jahr" : 1874,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -109,7 +109,7 @@
             "gedicht" : ["In Hamburg lebten zwei Ameisen,","Die wollten nach Australien reisen.", "Bei Altona auf der Chaussee,", "Da taten ihnen die Beine weh,", "Und da verzichteten sie weise", "Dann auf den letzten Teil der Reise.",
                 "\n","So will man oft und kann doch nicht", "Und leistet dann recht gern Verzicht.", "\n"],
             "jahr" : 1933,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -117,7 +117,7 @@
             "titel" : "Der Bumerang",
             "gedicht" : ["War einmal ein Bumerang;","War ein Weniges zu lang.","Bumerang flog ein Stück,","Aber kam nicht mehr zurück.","Publikum ­ noch stundenlang ","Wartete auf Bumerang.", "\n"],
             "jahr" : 1923,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -148,7 +148,7 @@
             "Gesegnet sei er allezeit",
             "Von der Wurzel bis zum Gipfel.", "\n"],
             "jahr" : 1811,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -160,7 +160,7 @@
                 "Wie laut die Nachtigall geschlagen,",
                 "Wie grün der Wald, den ich durchschritt.","\n"],
             "jahr" : 1850,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -181,7 +181,7 @@
                 "Da erglänzt in reiner Helle",
                 "Auf dem Tische Brot und Wein.","\n"],
             "jahr" : 1913,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -197,7 +197,7 @@
             "Hier vorne geht sie unter",
             "Und kehrt von hinten zurück.","\n"],
             "jahr" : 1832,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -213,7 +213,35 @@
             "Durch die Nacht, die mich umfangen,",
             "blickt zu mir der Töne Licht!", "\n"],
             "jahr" : 1802,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
+            "anzahlGelesen" : 0
+        },
+        {
+            "autor" : "Ludwig Uhland",
+            "titel" : "Abendwolken",
+            "gedicht" : ["Wolken seh ich abendwärts",
+            "Ganz in reinste Glut getaucht,",
+            "Wolken ganz in Licht zerhaucht,",
+            "Die so schwül gedunkelt hatten.",
+            "Ja! mir sagt mein ahnend Herz:",
+            "Einst noch werden, ob auch spät,",
+            "Wann die Sonne niedergeht,",
+            "Mir verklärt der Seele Schatten.","\n"],
+            "jahr" : 1884,
+            "ausgelesen" :  false,
+            "anzahlGelesen" : 0
+        },
+        {
+            "autor" : "Eugen Roth",
+            "titel" : "Das Schnitzel",
+            "gedicht" : ["Ein Mensch, der sich ein Schnitzel briet,",
+            "Bemerkte, dass ihm das misriet.",
+            "Jedoch, da er es selbst gebraten,",
+            "Tut er, als wär es ihm geraten,",
+            "Un, um sich nicht zu strafen Lügen,",
+            "Isst er´s mit herzlichem Vergnügen. ","\n"],
+            "jahr" : 1948,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -221,7 +249,7 @@
             "titel" : "",
             "gedicht" : [],
             "jahr" : 188873,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         },
         {
@@ -239,7 +267,7 @@
                 "\n", "Rejoice!  Rejoice!  I'm free! I'm free!", "The best of both worlds is mine at last.", "Oh, infinite progeny of Church, Hope, and ML,", "I curry favor not when I say:","Scan me right, fold me left, ",
                 "Lazy lady of many shapes, you've got class.","\n"],
             "jahr" : 1995,
-            "ausgelesen" : false,
+            "ausgelesen" :  false,
             "anzahlGelesen" : 0
         }
 

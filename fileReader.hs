@@ -96,23 +96,6 @@ printGedichteAt sammlung = map (printGedichtAt sammlung)
 
 
 
-
-{-- obsolete ?
--- *** returns first unread Poem
-firstUnread :: [Gedicht] -> String
-firstUnread [] = "keine ungelesenen Gedichte"
-firstUnread (x:xs)
-    | "ausgelesen = False" `isInfixOf` show x = getIntro x ++ getBody x
-    | otherwise = firstUnread xs
-
-
--- *** returns String with all unread Poems 
-listOfUnread :: [Gedicht] -> [String]
-listOfUnread [] = []
-listOfUnread (x:xs)
-    | "ausgelesen = False" `isInfixOf` show x = show("\n" ++ getIntro x ++ getBody x) : listOfUnread xs
-    | otherwise = listOfUnread xs -}
-
 -- ********************** Create Random Number *******************
 
 -- *** generate random Number from Date & Time
@@ -156,10 +139,9 @@ crossSum 0 = 0
 crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
 
 
-
+-- *** deletes all doubles in a List by: sorting List, grouping equal adjecents into new Lists, then maps "head" to the List
 deleteDoubles :: (Eq a, Ord a) => [a] -> [a]
 deleteDoubles = map head . group . sort --same as : map head (group (sort a)) 
-
 
 
 -- *** returns the index of the first element in [String]/hay matching String/needle
@@ -170,14 +152,9 @@ getFirstIndex needle hay = listToMaybe $ elemIndices needle hay -- returns List 
 -- *** returns List with Indices of all Elements in [String]/hay (f.e.["Eichendorf","Ringelnatz"]) matching String/needle (f.e "Eichendorf")
 getAllIndices :: String -> [String] -> [Int]
 getAllIndices = elemIndices -- returns List of indices of String in List
+-- same as: getAllIndices needle [hay] = elemIndices needle [hay]
 
-
-
--- *** gibt liste mit "ausgelesen"-werten zurück => ["True","True","False","True","False",...]
-ausgelesenToList :: [Gedicht] -> [String]
-ausgelesenToList = map (show . ausgelesen) --show (ausgelesen x) : ausgelesenToList xs
-
-
+-- *** returns a List with all the data Parts of a key 
 keyToList :: [Gedicht] -> String -> [String]
 keyToList [] _ = []
 keyToList (x:xs) needle = case needle of
@@ -202,19 +179,18 @@ fallOverAndDie err = do putStrLn err
 
 
 
-
 -- ********************** Change Data in Json File *******************
 
+
 -- *** changes ausgelesen to True & increments anzahlGelesen by 1
-    -- cuts List into Head and Tail at Index, copies old Element with new Values, sticks all parts back together
+    -- cuts List into Head and Tail at Index, copies old Element and changes Values, sticks all parts back together
 changeAmountRead :: Gedichte -> Int ->Gedichte
 changeAmountRead oldJson indx = do
     let haystack = gedichte oldJson
-    let needle = haystack !!indx -- printRandGedicht printed auch bei index-1
+    let needle = haystack !!indx 
     let poem = [Gedicht {autor=autor needle, titel=titel needle, gedicht=gedicht needle, jahr=jahr needle,ausgelesen= True,anzahlGelesen=anzahlGelesen needle+1}]
     let headStack = Prelude.take indx haystack -- cut off till needle
     let tailStack = Prelude.drop (indx+1) haystack -- cut of after needle
-    --let newstack = mergeLists headStack (mergeLists poem tailStack)
     let newstack = headStack ++ poem ++ tailStack -- ++ not so good for very long lists, when is it very long?
     let newJson = Gedichte newstack
     newJson
@@ -239,22 +215,22 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
            putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n"
            let length = getLength listGedichte
            let rand = randomNumbInBound(dateNumber (date current) current) length
-           putStrLn "Was möchten Sie tun?\n\t\t ein zufälliges Gedicht lesen? (r) \n\t\t ein ungelesenes Gedicht lesen? (u)\n\t\t Gedichte eines Autors lesen? (a) \n\t\t Die Anwendung verlassen (q)"
+           putStrLn "Was möchten Sie tun?\n\t\t ~ Ein zufälliges Gedicht lesen? (r) \n\t\t ~ Ein ungelesenes Gedicht lesen? (u)\n\t\t ~ Gedichte eines speziellen Autors lesen? (a) \n\t\t ~ Die Anwendung verlassen (q)"
            user <- getLine
            let check | user == "r" = do
                         let newJson = encode (changeAmountRead parsed rand)
                         BS.writeFile file2 newJson
                         putStrLn ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte rand)
                      | user == "u" = do
-                        let indx = getFirstIndex "False" (ausgelesenToList listGedichte)
+                        let indx = getFirstIndex "False" $ keyToList listGedichte "ausgelesen"--(ausgelesenToList listGedichte)
                         case indx of
                             Just i ->do
-                                putStrLn ("hi  "++ show i)
+                                --putStrLn ("hi  "++ show i)
                                 let newJson = encode (changeAmountRead parsed i)
                                 BS.writeFile file2 newJson
                                 --putStrLn ("Hier ein bisher ungelesenes Gedicht" ++ firstUnread listGedichte)
                                 putStr ("Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte i)
-                            Nothing -> putStrLn "Alle Gedichte wurden bereits Gelesen :)"
+                            Nothing -> putStrLn  "Alle Gedichte wurden bereits Gelesen :)\n"
                      | user == "a" = do
                         putStrLn "Welchen Autor wollen sie gerne lesen?"
                         autor <- getLine
@@ -272,20 +248,10 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                                    let newJson = encode $changeAmountsRead parsed indx_many
                                    BS.writeFile file2 newJson
                                    putStrLn $"Super! Ich habe sogar mehrere Gedichte von "++ autor ++ "\n" ++ strListToStringWith (printGedichteAt listGedichte indx_many) "\n\t"
-                        {- let indx_fst = getFirstIndex autor keys
-                        --print indx2
-                        case indx_fst of
-                            Just i -> do
-                                --putStrLn $"autorIndex"++ show keys
-                                let newJson = encode (changeAmountRead parsed i)
-                                BS.writeFile file2 newJson
-                                putStrLn $"Hier ein Gedicht von: "++ autor ++ "\n" ++ printGedichtAt listGedichte i
-                            Nothing -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles keys) "\n\t| " ++ "\n"
-                     -- | user == "n" = putStr "Sehr Schade, Sie verpassen was"-}
                      | user == "q" = do
                         putStr "Auf wiedersehen!"
                         exitSuccess
-                     | otherwise = putStr "Ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'n' für nichts"
+                     | otherwise = putStr "Entschuldigung, ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'q' zum Beenden der Anwendung"
            check
 
 
@@ -299,12 +265,13 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
         *** -> get unread single
             -> get unread plural
         *** -> get author single
-            -> get author plural
+        *** -> get author plural
             -> get author by firstname OR lastname
 
     Sprach-Tag hinzufügen (für Filter)? -> on Top: Gedichte mehrsprachig ermöglichen?
-    ausgelesenToList -> KeytoList
+    *** ausgelesenToList -> KeytoList
             -> Paramaters as Data
+    practice pointfree <-> pointfull conversion
 
 
     done
@@ -327,3 +294,29 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
     ----pretty print function instead of adding "\n\t" to String; Formatting
     ----cancel Case Sensitivity 
 --}
+
+
+
+{-- obsolete methods ?
+
+-- *** returns first unread Poem
+firstUnread :: [Gedicht] -> String
+firstUnread [] = "keine ungelesenen Gedichte"
+firstUnread (x:xs)
+    | "ausgelesen = False" `isInfixOf` show x = getIntro x ++ getBody x
+    | otherwise = firstUnread xs
+
+
+-- *** returns String with all unread Poems 
+listOfUnread :: [Gedicht] -> [String]
+listOfUnread [] = []
+listOfUnread (x:xs)
+    | "ausgelesen = False" `isInfixOf` show x = show("\n" ++ getIntro x ++ getBody x) : listOfUnread xs
+    | otherwise = listOfUnread xs 
+    
+    
+-- *** gibt liste mit "ausgelesen"-werten zurück => ["True","True","False","True","False",...]
+ausgelesenToList :: [Gedicht] -> [String]
+ausgelesenToList = map (show . ausgelesen) --show (ausgelesen x) : ausgelesenToList xs
+    
+    -}
