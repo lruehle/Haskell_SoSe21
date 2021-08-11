@@ -19,6 +19,7 @@ import Data.Map (fromList)
 import qualified Data.ByteString.Lazy as BS
 import GHC.Data.Maybe (fromJust, fromMaybe, listToMaybe)
 import GHC.Tc.Solver.Monad (getInertCans)
+import Text.Read (readMaybe)
 
 
 
@@ -215,12 +216,22 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
            putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n"
            let length = getLength listGedichte
            let rand = randomNumbInBound(dateNumber (date current) current) length
-           putStrLn "Was möchten Sie tun?\n\t\t ~ Ein zufälliges Gedicht lesen? (r) \n\t\t ~ Ein ungelesenes Gedicht lesen? (u)\n\t\t ~ Gedichte eines speziellen Autors lesen? (a) \n\t\t ~ Die Anwendung verlassen (q)"
+           putStrLn "Was möchten Sie tun?\n\t\t ~ Ein zufälliges Gedicht lesen? (r) \n\t\t ~ Gedicht an Stelle x lesen? (i)\n\t\t ~ Ein ungelesenes Gedicht lesen? (u)\n\t\t ~ Gedichte eines speziellen Autors lesen? (a) \n\t\t ~ Die Anwendung verlassen (q)"
            user <- getLine
            let check | user == "r" = do
                         let newJson = encode (changeAmountRead parsed rand)
                         BS.writeFile file2 newJson
                         putStrLn ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte rand)
+                    | user == "i" = do
+                        putStrLn $ "\nAlles klar. Das wievielte Gedicht soll ausgelesen werden? (1-" ++ show length ++ ")"
+                        input <- getLine
+                        let intInput = readMaybe input :: Maybe Int
+                        case intInput of
+                            Just i -> do
+                                 let newJson = encode (changeAmountRead parsed $i-1)
+                                 BS.writeFile file2 newJson
+                                 putStrLn ("\nSuper, hier das " ++ show i ++". Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte (i-1))
+                            Nothing -> putStrLn("\nBitte eine ganze Zahl zwischen 1 und "++show length ++" eingeben!")
                      | user == "u" = do
                         let indx = getFirstIndex "False" $ keyToList listGedichte "ausgelesen"--(ausgelesenToList listGedichte)
                         case indx of
@@ -229,7 +240,7 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                                 let newJson = encode (changeAmountRead parsed i)
                                 BS.writeFile file2 newJson
                                 --putStrLn ("Hier ein bisher ungelesenes Gedicht" ++ firstUnread listGedichte)
-                                putStr ("Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte i)
+                                putStrLn $ "Hier ein bisher ungelesenes Gedicht" ++ printGedichtAt listGedichte i
                             Nothing -> putStrLn  "Alle Gedichte wurden bereits Gelesen :)\n"
                      | user == "a" = do
                         putStrLn "Welchen Autor wollen sie gerne lesen?"
@@ -251,7 +262,7 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                      | user == "q" = do
                         putStr "Auf wiedersehen!"
                         exitSuccess
-                     | otherwise = putStr "Entschuldigung, ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'q' zum Beenden der Anwendung"
+                     | otherwise = putStr "Entschuldigung, ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'i' für ein Gedicht an x-ter Stelle  \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'q' zum Beenden der Anwendung"
            check
 
 
