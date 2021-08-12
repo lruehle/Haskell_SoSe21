@@ -10,16 +10,16 @@ import Data.Aeson
 import Data.Aeson.Types (parseMaybe)
 import Data.Aeson.Text (encodeToLazyText)
 import qualified Data.Text as DT
-import Data.Time
 import Data.Time.Clock.POSIX
-import Data.Time.Calendar
-import Data.Time.Calendar.WeekDate
+
 import Data.List
 import Data.Map (fromList)
 import qualified Data.ByteString.Lazy as BS
 import GHC.Data.Maybe (fromJust, fromMaybe, listToMaybe)
 import GHC.Tc.Solver.Monad (getInertCans)
 import Text.Read (readMaybe)
+-- own modules
+import qualified Helpers as H
 
 
 
@@ -60,7 +60,7 @@ instance ToJSON Gedichte
 
 
 file :: FilePath
-file = "Gedichte2.json"
+file = "Gedichte3.json" 
 
 file2 :: FilePath
 file2 = "Gedichte3.json"
@@ -77,11 +77,8 @@ getIntro :: Gedicht -> String
 getIntro inst = "\n\t" ++ autor inst ++ " - "++ show (jahr inst) ++ " \n\t" ++ titel inst ++"\n"
 
 getBody :: Gedicht -> String
-getBody inst = "\n " ++ strListToStringWith (gedicht inst) "\n \t"
+getBody inst = "\n " ++ H.strListToStringWith (gedicht inst) "\n \t"
 
-getLength :: [a] -> Int
-getLength [] = 0
-getLength (_:xs) = 1 + getLength xs
 
 -- *** prints Gedicht Intro & body at Index 
 printGedichtAt :: [Gedicht] -> Int -> String
@@ -89,71 +86,13 @@ printGedichtAt sammlung indx =
     let
         g = getIntro (sammlung !!indx)
         h = getBody (sammlung !!indx)
-    in noticeMe $ g ++ h
+    in H.noticeMe $ g ++ h
 
 printGedichteAt :: [Gedicht] -> [Int] -> [String]
 printGedichteAt sammlung = map (printGedichtAt sammlung)
 
 
-
-
--- ********************** Create Random Number *******************
-
--- *** generate random Number from Date & Time
-dateNumber :: (Integer,Int,Int) -> UTCTime ->Int
-dateNumber (y,m,d) time = a + b + c + e
-    where a = fromIntegral(diffTimeToPicoseconds (utctDayTime time))
-          b =  d
-          c =  m
-          e =  fromIntegral y
-
--- *** check if num/Queersumme small enough for bound; bound is length of list => List indx + 1
-randomNumbInBound :: Int -> Int -> Int
-randomNumbInBound numb bound
-    | numb == 0 = 0 --ever reached?
-    | numb <= bound = numb-1 --numb is now == indx
-    | otherwise = randomNumbInBound (crossSum numb) bound --get crossSum until small enough
-
-
-
-
 -- ********************** Helper Functions *******************
-
-date :: UTCTime -> (Integer,Int,Int) --Year is type Integer
-date = toGregorian .utctDay -- will output f.e (2021,8,5)
-
--- *** if delimiter needed use strListToStringWith
-strListToString :: [String] -> String -- ["erster Satz","zweiter Satz linebreak","dritter Satz"] -- unlines does same check: https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:unlines
-strListToString [] = []
-strListToString (x:xs) = x ++ strListToString xs --needs putStr to format in ghci
---listToString (x:xs) = x  ++ "\n" ++ listToString xs -- adds New Line, 
-
--- *** if no delimiter, use listToString
-strListToStringWith :: [String] -> String -> String
-strListToStringWith [] _ = []
---strListToStringWith [x] _ = x --last Element does not get \n
-strListToStringWith (x:xs) delim = delim ++ x ++ strListToStringWith xs delim
-
--- *** Queersumme
-crossSum :: Int -> Int
-crossSum 0 = 0
-crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 % 10 =3
-
-
--- *** deletes all doubles in a List by: sorting List, grouping equal adjecents into new Lists, then maps "head" to the List
-deleteDoubles :: (Eq a, Ord a) => [a] -> [a]
-deleteDoubles = map head . group . sort --same as : map head (group (sort a)) 
-
-
--- *** returns the index of the first element in [String]/hay matching String/needle
-getFirstIndex :: String -> [String] -> Maybe Int --needs f.e ["Eichendorf", "Ringelnatz"] als [String]
-getFirstIndex needle hay = listToMaybe $ elemIndices needle hay -- returns List of indices of String in List, and takes first Element from it
-
-
--- *** returns List with Indices of all Elements in [String]/hay (f.e.["Eichendorf","Ringelnatz"]) matching String/needle (f.e "Eichendorf")
-getAllIndices :: String -> [String] -> [Int]
-getAllIndices = elemIndices -- returns List of indices of String in List
--- same as: getAllIndices needle [hay] = elemIndices needle [hay]
 
 -- *** returns a List with all the data Parts of a key 
 keyToList :: [Gedicht] -> String -> [String]
@@ -168,15 +107,6 @@ keyToList (x:xs) needle = case needle of
     _-> []
 
 
-noticeMe:: String -> String
-noticeMe a= "\n    ..........................................\n " ++ a ++"\n    ..........................................\n"
---noticeMe a= "\n    ******************************************\n " ++ a ++"\n    ******************************************\n"
---noticeMe a= "\n\t -------------------------\n " ++ a ++"\n\t -------------------------\n"
-
--- *** fallOverAndDie code from : https://stackoverflow.com/questions/14159855/how-to-implement-early-exit-return-in-haskell 
-fallOverAndDie :: String -> IO a
-fallOverAndDie err = do putStrLn err
-                        exitWith (ExitFailure 1)
 
 
 
@@ -196,10 +126,11 @@ changeAmountRead oldJson indx = do
     let newJson = Gedichte newstack
     newJson
 
+-- ** changes Read Value for Array of indices
 changeAmountsRead :: Gedichte -> [Int] -> Gedichte
 changeAmountsRead json [] = json
 changeAmountsRead json [x] = changeAmountRead json x
-changeAmountsRead json (x:xs) = changeAmountsRead (changeAmountRead json x) xs
+changeAmountsRead json (x:xs) = changeAmountsRead (changeAmountRead json x) xs     -- should be only ONE file at the end with ALL of the new values
 
 
 
@@ -210,12 +141,12 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
     current <- getCurrentTime -- not TimeZoned
     parsedData <- eitherDecode <$> jsonData :: IO (Either String Gedichte) -- without IO throws error; reminder <$> is short for fmap, check on Functors
     case parsedData of --https://stackoverflow.com/questions/46944347/how-to-get-value-from-either   otherwise will return "Left ..." or "Right..."
-       Left err -> fallOverAndDie ("Parsing Error! Programm will be stopped because: "++err)
+       Left err -> H.fallOverAndDie ("Parsing Error! Programm will be stopped because: "++err)
        Right parsed -> do
            let listGedichte = gedichte parsed
-           putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show (getLength listGedichte) ++ " Gedichte zur Auswahl \n"
-           let length = getLength listGedichte
-           let rand = randomNumbInBound(dateNumber (date current) current) length
+           let length = H.getLength listGedichte
+           putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show length ++ " Gedichte zur Auswahl \n"
+           let rand = H.randomNumbInBound(H.dateNumber (H.date current) current) length
            putStrLn "Was möchten Sie tun?\n\t\t ~ Ein zufälliges Gedicht lesen? (r) \n\t\t ~ Gedicht an Stelle x lesen? (i)\n\t\t ~ Ein ungelesenes Gedicht lesen? (u)\n\t\t ~ Gedichte eines speziellen Autors lesen? (a) \n\t\t ~ Die Anwendung verlassen (q)"
            user <- getLine
            let check | user == "r" = do
@@ -233,7 +164,7 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                                  putStrLn ("\nSuper, hier das " ++ show i ++". Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte (i-1))
                             Nothing -> putStrLn("\nBitte eine ganze Zahl zwischen 1 und "++show length ++" eingeben!")
                      | user == "u" = do
-                        let indx = getFirstIndex "False" $ keyToList listGedichte "ausgelesen"--(ausgelesenToList listGedichte)
+                        let indx = H.getFirstIndex "False" $ keyToList listGedichte "ausgelesen"--(ausgelesenToList listGedichte)
                         case indx of
                             Just i ->do
                                 --putStrLn ("hi  "++ show i)
@@ -245,11 +176,11 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                      | user == "a" = do
                         putStrLn "Welchen Autor wollen sie gerne lesen?"
                         autor <- getLine
-                        putStrLn $ noticeMe $"Moment, ich suche nach Gedichten von " ++ autor
+                        putStrLn $ H.noticeMe $"Moment, ich suche nach Gedichten von " ++ autor
                         let keys = keyToList listGedichte "autor"
-                        let indx_many = getAllIndices autor keys
+                        let indx_many = H.getAllIndices autor keys
                         case indx_many of
-                            [] -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ strListToStringWith (deleteDoubles keys) "\n\t| " ++ "\n"
+                            [] -> putStrLn $"Kein Gedicht von: " ++ autor ++ " gefunden\nZur Auswahl stehen:" ++ H.strListToStringWith (H.deleteDoubles keys) "\n\t| " ++ "\n"
                             [x] -> do
                                 let newJson = encode (changeAmountRead parsed x)
                                 BS.writeFile file2 newJson
@@ -258,12 +189,27 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
                                    --let read = changeAmountsRead parsed indx_many
                                    let newJson = encode $changeAmountsRead parsed indx_many
                                    BS.writeFile file2 newJson
-                                   putStrLn $"Super! Ich habe sogar mehrere Gedichte von "++ autor ++ "\n" ++ strListToStringWith (printGedichteAt listGedichte indx_many) "\n\t"
+                                   putStrLn $"Super! Ich habe sogar mehrere Gedichte von "++ autor ++ "\n" ++ H.strListToStringWith (printGedichteAt listGedichte indx_many) "\n\t"
                      | user == "q" = do
                         putStr "Auf wiedersehen!"
                         exitSuccess
                      | otherwise = putStr "Entschuldigung, ich lerne noch! Bisher verstehe ich nur:\n\t 'r' für ein zufälliges Gedicht \n\t 'i' für ein Gedicht an x-ter Stelle  \n\t 'u' für ein ungelesenes Gedicht \n\t 'a' für Gedichtausgabe nach Autor \n\t und 'q' zum Beenden der Anwendung"
            check
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {-- next up:
