@@ -1,14 +1,15 @@
 # Haskell_SoSe21
- 
-save Data as Tuples? as each json Element should have the same amount of data? Author, Title, Text, etc.
 
-check on https://wiki.haskell.org/Syntactic_sugar/Cons for Cons of guards, do....
+to run application:
+    1. open cmd
+    2. go to fileReader.hs directory
+    3. run runghc .\fileReader.hs 
+    4. choose what you want to do
+    5. repeat 3.-5. to check everything out
+    6. Poems Database is "Gedichte3.json"
 
-check https://stackoverflow.com/questions/2931557/haskell-check-for-user-input-errors for read out poem by Date
-
-check UTF-8 library, apparently broken?
-
-Poets from https://wiki.haskell.org/Humor/Poetry
-and https://www.deutschelyrik.de/
-and https://gedichte.xbib.de/
-and https://www.hs-augsburg.de/~harsch/germanica/Chronologie/d_chrono.html
+Poems Sources:
+    https://wiki.haskell.org/Humor/Poetry
+    https://www.deutschelyrik.de/
+    https://gedichte.xbib.de/
+    https://www.hs-augsburg.de/~harsch/germanica/Chronologie/d_chrono.html
