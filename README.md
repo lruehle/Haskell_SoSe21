@@ -8,6 +8,17 @@
     5. repeat 3.-5. to check everything out
     6. Poems Database is "Gedichte3.json"
 
+## might get to in Future:
+    1.  Main Loop until quit
+    2.  multilanguage poems, sort output by language
+    3.  seperate First & Lastname of authors
+    4.  Case IN-sensitivity for Input
+    5.  Type Parameter for Json Tags f.e in „keyToList“	
+    6.  GUI
+    7.  own Json Parser
+    8.  User Input Poems
+
+
 ## Poems Sources:
     https://wiki.haskell.org/Humor/Poetry
     https://www.deutschelyrik.de/
