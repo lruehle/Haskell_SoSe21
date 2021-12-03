@@ -145,14 +145,14 @@ main = do --https://www.schoolofhaskell.com/school/starting-with-haskell/librari
        Right parsed -> do
            let listGedichte = gedichte parsed
            let length = H.getLength listGedichte
-           putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show length ++ " Gedichte zur Auswahl \n"
+           putStrLn $ "\nWilkommen in der Gedichte Sammlung!\nZur Zeit stehen " ++ show length ++ " Gedichte zur Auswahl \n"  --  foldr (\_ n -> 1 + n) 0
            let rand = H.randomNumbInBound(H.dateNumber (H.date current) current) length
            putStrLn "Was möchten Sie tun?\n\t\t ~ Ein zufälliges Gedicht lesen? (r) \n\t\t ~ Gedicht an Stelle x lesen? (i)\n\t\t ~ Ein ungelesenes Gedicht lesen? (u)\n\t\t ~ Gedichte eines speziellen Autors lesen? (a) \n\t\t ~ Die Anwendung verlassen (q)"
            user <- getLine
            let check | user == "r" = do
                         let newJson = encode (changeAmountRead parsed rand)
                         BS.writeFile file2 newJson
-                        putStrLn ("\nSuper, hier ein zufälliges Gedicht! Viel Spaß! \n" ++ printGedichtAt listGedichte rand)
+                        putStrLn ("\nSuper, hier ein zufälliges Gedicht an Stelle "++show rand++"! Viel Spaß! \n" ++ printGedichtAt listGedichte rand)
                     | user == "i" = do
                         putStrLn $ "\nAlles klar. Das wievielte Gedicht soll ausgelesen werden? (1-" ++ show length ++ ")"
                         input <- getLine

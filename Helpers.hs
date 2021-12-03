@@ -47,7 +47,7 @@ crossSum num = mod num 10 + crossSum (div num 10) --mod gets last digit as 1983 
 
 -- *** deletes all doubles in a List by: sorting List, grouping equal adjecents into new Lists, then maps "head" to the List
 deleteDoubles :: (Eq a, Ord a) => [a] -> [a]
-deleteDoubles = map head . group . sort --same as : map head (group (sort a)) 
+deleteDoubles = map head . group . sort --same as : map head (group (sort a)), a can be ommited; map is HOF 
 
 
 -- *** returns the index of the first element in [String]/hay matching String/needle
@@ -64,7 +64,7 @@ getAllIndices = elemIndices -- returns List of indices of String in List
 -- *** generate random Number from Date & Time
 dateNumber :: (Integer,Int,Int) -> UTCTime ->Int
 dateNumber (y,m,d) time = a + b + c + e
-    where a = fromIntegral(diffTimeToPicoseconds (utctDayTime time))
+    where a = fromIntegral(diffTimeToPicoseconds (utctDayTime time)) --picoseconds since 00:00 today
           b =  d
           c =  m
           e =  fromIntegral y

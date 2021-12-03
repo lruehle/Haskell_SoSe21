@@ -125,9 +125,9 @@
             "titel": "Nachtzauber"
         },
         {
-            "ausgelesen": false,
+            "ausgelesen": true,
             "jahr": 1874,
-            "anzahlGelesen": 0,
+            "anzahlGelesen": 1,
             "autor": "Wilhelm Busch",
             "gedicht": [
                 "Es sitzt ein Vogel auf dem Leim,",
@@ -177,7 +177,7 @@
         {
             "ausgelesen": true,
             "jahr": 1933,
-            "anzahlGelesen": 3,
+            "anzahlGelesen": 7,
             "autor": "Joachim Ringelnatz",
             "gedicht": [
                 "In Hamburg lebten zwei Ameisen,",
@@ -196,7 +196,7 @@
         {
             "ausgelesen": true,
             "jahr": 1923,
-            "anzahlGelesen": 3,
+            "anzahlGelesen": 1,
             "autor": "Joachim Ringelnatz",
             "gedicht": [
                 "War einmal ein Bumerang;",
